@@ -31,6 +31,31 @@ package gamehub {
 
 
 
+    package utils {
+        interface Action <<function>> {
+            + void action()
+        }
+
+        class MenuOption {
+            - title: String
+            --
+            + MenuOption(title: String, action: Action)
+            + call()
+        }
+        MenuOption "1..1 option" --- "1..1 action" Action
+
+        class Menu {
+            - scanner: Scanner
+            --
+            + {static} showMenu(options: ArrayList<MenuOption>)
+            + {static} getInputInt(promptMsg: String, min: int = 0, max: int = 1): int
+        }
+    }
+
+
+
+
+
     package user {
         abstract class Player {
             - username: String
@@ -52,10 +77,6 @@ package gamehub {
             each class implements the methods
             and return values based on their specifications.
         end note
-
-
-
-
 
         class StandardProfile {}
         MemberProfile <|-down- StandardProfile 
@@ -175,7 +196,7 @@ package gamehub {
             + {static} parseData()
         }
         GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
-        GameHub "1..1 app" *----- "1..1 collection" GameCollection
+        GameHub "1..1 app" *---- "1..1 collection" GameCollection
 
 
 

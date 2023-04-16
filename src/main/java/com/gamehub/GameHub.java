@@ -1,8 +1,6 @@
 package com.gamehub;
 
 /**
- * GameHub
- * 
  * Root point of the GameHub application.
  * Entry point of the executable.
  */
