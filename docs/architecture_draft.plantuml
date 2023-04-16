@@ -1,0 +1,197 @@
+@startuml architecture_draft
+
+!theme cyborg-outline
+skinparam BackgroundColor #222222
+'skinparam groupInheritance 2
+skinparam PackageStyle frame
+'skinparam linetype ortho
+left to right direction
+
+
+
+
+
+package gamehub {
+
+    class GameHub {
+        - {static} adminMode: Boolean = false
+        - {static} loggedInPlayer: RegisteredPlayer
+        --
+        - {static} login(asAdmin: Boolean)
+        - {static} createPlayer()
+        - {static} showPlayerInfo(p: Player)
+        - {static} showGameInfo(g: Game)
+        - {static} createBot()
+    }
+    note left of GameHub::createPlayer
+        admin mode
+    end note
+
+
+
+
+
+    package user {
+        abstract class Player {
+            - username: String
+        }
+        GameHub "1..1 app" *-- "0..* players" Player
+
+
+
+
+
+        abstract class MemberProfile {
+            {abstract} {static} maxGames()
+            {abstract} {static} canOwnGames()
+            {abstract} {static} maxFriends()
+            {abstract} {static} canBefriend(p1: Player, p2: Player)
+        }
+
+        note top of MemberProfile
+            each class implements the methods
+            and return values based on their specifications.
+        end note
+
+
+
+
+
+        class StandardProfile {}
+        MemberProfile <|-down- StandardProfile 
+        class GoldProfile {}
+        MemberProfile <|-down- GoldProfile 
+        class KidProfile {}
+        MemberProfile <|-down- KidProfile 
+        class BotProfile {}
+        MemberProfile <|-down- BotProfile 
+
+
+
+
+
+        class RegisteredPlayer {
+            - email: String
+            - birthDate: Date
+            - memberProfile: MemberProfile
+            --
+            + addFriend(p: Player)
+            + removeFriend(p: Player)
+            + getGame(g: Game)
+            + offerGame(g: Game, p: RegisteredPlayer)
+            + playWithFriend(p: Player, g: Game)
+            + deleteAccount()
+        }
+        Player <|-down- RegisteredPlayer
+        RegisteredPlayer "0..n friends \n" -- "0..n friends" RegisteredPlayer
+
+        note top of RegisteredPlayer
+            addFriend(): kids stay with kids,
+            adults stay with adults
+        end note
+
+
+
+
+
+        class Child {
+            --
+            + addFriend(p: Player)
+        }
+        Child "0..n children" --- "1..2 tutors" RegisteredPlayer
+
+        note right of Child::tutors
+            min 1 and max 2.
+        end note
+
+        RegisteredPlayer <|-down- Child
+
+
+
+
+
+        class Admin {
+            --
+            + addBot()
+        }
+        RegisteredPlayer <|-- Admin
+
+
+
+
+
+        package bot {
+            class Bot {}
+            Player <|-down---- Bot
+            Game "1..1 game" -- "0..1 bot" Bot
+
+
+
+
+
+            interface GameIA {}
+            Bot "0..n strategies" *-- "0..1 owner" GameIA
+
+            class BasicGameIA {
+                - winProbability: Float
+                --
+                + wins(): Boolean
+            }
+            GameIA <|-down- BasicGameIA
+        }
+    }
+
+
+
+
+
+    package library {
+        class Game {
+            - name: String
+            --
+            + play(p1: Player, p2: Player)
+        }
+        RegisteredPlayer "0..n players (1)" ----- "0..n ownedGames (1)" Game: (1)
+
+
+
+
+
+        class GameResult {}
+        GameResult "0..n results (2)" ----- "1..1 game (2)" Game: (2)
+        GameResult "0..n results (3)" ----- "2..2 players (3)" Player: (3)
+        GameResult "0..n wins (4)" ----- "1..1 winner (4)" Player: (4)
+        note top of GameResult
+            only for player-player results.
+        end note
+
+
+
+
+
+        class GameCollection {
+            - {static} DATA_PATH: String
+            --
+            + {static} parseData()
+        }
+        GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
+        GameHub "1..1 app" *----- "1..1 collection" GameCollection
+
+
+
+
+
+        class Platform {
+            - name: String
+        }
+        Platform "1..1 platform (6)" ----- "0..n players (6)" RegisteredPlayer: (6)
+        Platform "1..n platforms (7)" ---- "0..n games (7)" Game: (7)
+    }
+
+}
+
+
+
+
+
+@enduml
