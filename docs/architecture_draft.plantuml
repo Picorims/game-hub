@@ -22,6 +22,9 @@ package gamehub {
         - {static} showPlayerInfo(p: Player)
         - {static} showGameInfo(g: Game)
         - {static} createBot()
+        - {static} quit()
+        ..
+        - {static} showMainMenu()
     }
     note left of GameHub::createPlayer
         admin mode
@@ -47,7 +50,7 @@ package gamehub {
         class Menu {
             - scanner: Scanner
             --
-            + {static} showMenu(options: ArrayList<MenuOption>)
+            + {static} showMenu(title: String, options: ArrayList<MenuOption>)
             + {static} getInputInt(promptMsg: String, min: int = 0, max: int = 1): int
         }
     }
@@ -169,11 +172,23 @@ package gamehub {
     package library {
         class Game {
             - name: String
+            - genre: String
             --
             + play(p1: Player, p2: Player)
         }
         RegisteredPlayer "0..n players (1)" ----- "0..n ownedGames (1)" Game: (1)
 
+
+
+
+
+        class GameVersion {
+            - year: int
+            - publisher: String
+            - globalSales: Float
+        }
+        Game "1..1 game (8)" --- "1..n versions (8)" GameVersion: (8)
+        Platform "1..1 platform (9)" --- "1..n gameVersions (9)" GameVersion: (9)
 
 
 
@@ -191,11 +206,11 @@ package gamehub {
 
 
         class GameCollection {
-            - {static} DATA_PATH: String
             --
-            + {static} parseData()
+            + {static} GameCollection(dataPath: String)
         }
         GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
+        GameCollection "1..1 collection (1)" ----- "0..n platforms (1)" Platform: (1)
         GameHub "1..1 app" *---- "1..1 collection" GameCollection
 
 
@@ -206,7 +221,6 @@ package gamehub {
             - name: String
         }
         Platform "1..1 platform (6)" ----- "0..n players (6)" RegisteredPlayer: (6)
-        Platform "1..n platforms (7)" ---- "0..n games (7)" Game: (7)
     }
 
 }

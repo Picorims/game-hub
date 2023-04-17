@@ -22,13 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.gamehub.utils;
+package com.gamehub.library;
+
+import java.util.ArrayList;
 
 /**
- * Exception thrown when the menu faces a problem,
- * such as bad arguments.
+ * Represents a device that can host games
  */
-public class MenuException extends Exception {
-    public MenuException() {super();}
-    public MenuException(String msg) {super(msg);}
+public class Platform {
+    private final String name;
+    private ArrayList<GameVersion> gameVersions;
+
+    Platform(String name) {
+        this.name = name;
+        gameVersions = new ArrayList<>();
+    }
+
+    public void addGameVersion(GameVersion gameVersion) {
+        gameVersions.add(gameVersion);
+    }
 }

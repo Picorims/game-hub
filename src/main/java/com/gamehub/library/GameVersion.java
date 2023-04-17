@@ -22,13 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.gamehub.utils;
+package com.gamehub.library;
 
 /**
- * Exception thrown when the menu faces a problem,
- * such as bad arguments.
+ * Represents a version of a game for a specific platform
  */
-public class MenuException extends Exception {
-    public MenuException() {super();}
-    public MenuException(String msg) {super(msg);}
+public class GameVersion {
+    private final Game game;
+    private final Platform platform;
+    private final int year;
+    private final String publisher;
+    private final Float globalSales;
+
+    public GameVersion(Game game, Platform platform, int year, String publisher, Float globalSales) {
+        this.game = game;
+        this.platform = platform;
+        this.year = year;
+        this.publisher = publisher;
+        this.globalSales = globalSales;
+    }
 }

@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        {
+            "type": "java",
+            "name": "GameHub",
+            "request": "launch",
+            "mainClass": "com.gamehub.GameHub",
+            "projectName": "app3_java_projet_CharlySchmidt",
+            "args": "${command:SpecifyProgramArgs}"
+        },
+        // {
+        //     "type": "java",
+        //     "name": "Menu",
+        //     "request": "launch",
+        //     "mainClass": "com.gamehub.utils.Menu",
+        //     "projectName": "app3_java_projet_CharlySchmidt"
+        // }
+    ]
+}

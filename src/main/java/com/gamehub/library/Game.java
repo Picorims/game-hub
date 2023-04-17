@@ -1,3 +1,5 @@
+package com.gamehub.library;
+
 /*
 MIT License
 
@@ -22,13 +24,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.gamehub.utils;
+import java.util.ArrayList;
 
 /**
- * Exception thrown when the menu faces a problem,
- * such as bad arguments.
+ * Represents a game for any platform.
+ * If the name is identical in the CSV, it is the same game.
+ * For each platform, a GameVersion is created.
  */
-public class MenuException extends Exception {
-    public MenuException() {super();}
-    public MenuException(String msg) {super(msg);}
+public class Game {
+    private final String name;
+    private final String genre;
+    private ArrayList<GameVersion> versions;
+
+    public Game(String name, String genre) {
+        this.name = name;
+        this.genre = genre;
+        versions = new ArrayList<>();
+    }
+
+    public void addGameVersion(GameVersion version) {
+        versions.add(version);
+    }
 }
