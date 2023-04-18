@@ -81,5 +81,7 @@ public class GameHub {
         System.out.println("Loading...");
         collection = new GameCollection(args[0]);
         showMainMenu();
+
+        // TODO menu state machine
     }
 }

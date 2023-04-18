@@ -69,26 +69,28 @@ package gamehub {
 
 
 
-        abstract class MemberProfile {
-            {abstract} {static} maxGames()
-            {abstract} {static} canOwnGames()
-            {abstract} {static} maxFriends()
-            {abstract} {static} canBefriend(p1: Player, p2: Player)
+        package profile {
+            interface MemberProfile {
+                + {abstract} maxGames(): int
+                + {abstract} canOwnGames(): boolean
+                + {abstract} maxFriends(): int
+                + {abstract} canBefriend(p1: Player, p2: Player): boolean
+            }
+
+            note top of MemberProfile
+                each class implements the methods
+                and return values based on their specifications.
+            end note
+
+            class StandardProfile {}
+            MemberProfile <|-down- StandardProfile 
+            class GoldProfile {}
+            StandardProfile <|-down- GoldProfile 
+            class KidProfile {}
+            MemberProfile <|-down- KidProfile 
+            class BotProfile {}
+            MemberProfile <|-down- BotProfile 
         }
-
-        note top of MemberProfile
-            each class implements the methods
-            and return values based on their specifications.
-        end note
-
-        class StandardProfile {}
-        MemberProfile <|-down- StandardProfile 
-        class GoldProfile {}
-        MemberProfile <|-down- GoldProfile 
-        class KidProfile {}
-        MemberProfile <|-down- KidProfile 
-        class BotProfile {}
-        MemberProfile <|-down- BotProfile 
 
 
 
@@ -108,6 +110,7 @@ package gamehub {
         }
         Player <|-down- RegisteredPlayer
         RegisteredPlayer "0..n friends \n" -- "0..n friends" RegisteredPlayer
+        MemberProfile "1..1 profile" -- "0..n players" RegisteredPlayer
 
         note top of RegisteredPlayer
             addFriend(): kids stay with kids,
@@ -153,8 +156,10 @@ package gamehub {
 
 
 
-            interface GameIA {}
-            Bot "0..n strategies" *-- "0..1 owner" GameIA
+            interface GameIA {
+                + {abstract} wins(): Boolean
+            }
+            Bot "0..n strategies" *--- "0..1 owner" GameIA
 
             class BasicGameIA {
                 - winProbability: Float
@@ -195,8 +200,8 @@ package gamehub {
 
         class GameResult {}
         GameResult "0..n results (2)" ----- "1..1 game (2)" Game: (2)
-        GameResult "0..n results (3)" ----- "2..2 players (3)" Player: (3)
-        GameResult "0..n wins (4)" ----- "1..1 winner (4)" Player: (4)
+        GameResult "0..n results (3)" ---- "2..2 players (3)" Player: (3)
+        GameResult "0..n wins (4)" ---- "1..1 winner (4)" Player: (4)
         note top of GameResult
             only for player-player results.
         end note
@@ -210,8 +215,8 @@ package gamehub {
             + {static} GameCollection(dataPath: String)
         }
         GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
-        GameCollection "1..1 collection (1)" ----- "0..n platforms (1)" Platform: (1)
-        GameHub "1..1 app" *---- "1..1 collection" GameCollection
+        GameCollection "1..1 collection (10)" ----- "0..n platforms (10)" Platform: (10)
+        GameHub "1..1 app" *--- "1..1 collection" GameCollection
 
 
 
