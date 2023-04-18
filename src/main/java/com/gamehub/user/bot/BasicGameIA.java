@@ -1,5 +1,3 @@
-package com.gamehub.library;
-
 /*
 MIT License
 
@@ -24,35 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import java.util.ArrayList;
+package com.gamehub.user.bot;
 
-import com.gamehub.user.bot.Bot;
+import java.util.Random;
 
 /**
- * Represents a game for any platform.
- * If the name is identical in the CSV, it is the same game.
- * For each platform, a GameVersion is created.
- * A Game may have at most one bot that can be used to play
- * the game.
+ * IA that wins if a random value is greater than
+ * the win probability.
  */
-public class Game {
-    private final String name;
-    private final String genre;
-    private ArrayList<GameVersion> versions;
-    private Bot bot;
+public class BasicGameIA implements GameIA {
+    private static Random random = new Random();
+    private float winProbability;
 
-    public Game(String name, String genre) {
-        this.name = name;
-        this.genre = genre;
-        versions = new ArrayList<>();
-        this.bot = null;
+    public BasicGameIA(float winProbability) {
+        this.winProbability = winProbability;
     }
 
-    public void addGameVersion(GameVersion version) {
-        versions.add(version);
+    /**
+     * Uses 0.5f as the default probability.
+     */
+    public BasicGameIA() {
+        this(0.5f);
     }
 
-    public void addBot(Bot bot) {
-        this.bot = bot;
+    public void setWinProbability(float winProbability) {
+        this.winProbability = winProbability;
     }
+
+    @Override
+    public boolean wins() {
+        return random.nextFloat() >= winProbability;
+    }
+
+    public static void main(String[] args) {
+        //tests
+        BasicGameIA ia = new BasicGameIA(0);
+        assert ia.wins();
+        ia.setWinProbability(1);
+        assert !ia.wins();
+        System.out.println("BasicGameIA OK");
+    }
+    
 }

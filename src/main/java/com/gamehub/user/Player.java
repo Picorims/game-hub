@@ -24,6 +24,22 @@ SOFTWARE.
 
 package com.gamehub.user;
 
+import com.gamehub.user.profile.MemberProfile;
+
+/**
+ * Defines the root for every entity that can play games
+ * (registered players, bots, etc.)
+ */
 public abstract class Player {
-    // TODO
+    private final String username;
+    private MemberProfile memberProfile;
+
+    public Player(String username) {
+        this.username = username;
+        this.memberProfile = null;
+    }
+
+    public void setMemberProfile(MemberProfile profile) {
+        this.memberProfile = profile;
+    }
 }

@@ -1,5 +1,3 @@
-package com.gamehub.library;
-
 /*
 MIT License
 
@@ -23,36 +21,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+package com.gamehub.user.bot;
 
 import java.util.ArrayList;
 
-import com.gamehub.user.bot.Bot;
+import com.gamehub.library.Game;
+import com.gamehub.user.Player;
+import com.gamehub.user.profile.BotProfile;
 
 /**
- * Represents a game for any platform.
- * If the name is identical in the CSV, it is the same game.
- * For each platform, a GameVersion is created.
- * A Game may have at most one bot that can be used to play
- * the game.
+ * A bot can play against a player using an IA.
+ * It is associated to games that it supports.
  */
-public class Game {
-    private final String name;
-    private final String genre;
-    private ArrayList<GameVersion> versions;
-    private Bot bot;
+public class Bot extends Player {
 
-    public Game(String name, String genre) {
-        this.name = name;
-        this.genre = genre;
-        versions = new ArrayList<>();
-        this.bot = null;
-    }
+    private ArrayList<Game> games;
 
-    public void addGameVersion(GameVersion version) {
-        versions.add(version);
-    }
+    private ArrayList<GameIA> strategies;
 
-    public void addBot(Bot bot) {
-        this.bot = bot;
+    public Bot(String username) {
+        super(username);
+        setMemberProfile(new BotProfile());
     }
+    
+    public void addGame(Game game) {games.add(game);}
+    public void addStrategy(GameIA ia) {strategies.add(ia);}
 }

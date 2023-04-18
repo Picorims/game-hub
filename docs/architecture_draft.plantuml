@@ -62,6 +62,7 @@ package gamehub {
     package user {
         abstract class Player {
             - username: String
+            - memberProfile: MemberProfile
         }
         GameHub "1..1 app" *-- "0..* players" Player
 
@@ -99,7 +100,6 @@ package gamehub {
         class RegisteredPlayer {
             - email: String
             - birthDate: Date
-            - memberProfile: MemberProfile
             --
             + addFriend(p: Player)
             + removeFriend(p: Player)
@@ -150,7 +150,6 @@ package gamehub {
         package bot {
             class Bot {}
             Player <|-down---- Bot
-            Game "1..1 game" -- "0..1 bot" Bot
 
 
 
@@ -182,6 +181,7 @@ package gamehub {
             + play(p1: Player, p2: Player)
         }
         RegisteredPlayer "0..n players (1)" ----- "0..n ownedGames (1)" Game: (1)
+        Game "1..* games" -- "0..1 bot" Bot
 
 
 
