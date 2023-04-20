@@ -21,31 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-package com.gamehub.user.profile;
-
-import com.gamehub.user.Player;
+package com.gamehub.user.bot;
 
 /**
- * Template for creating registered player profiles.
- * Describes the permissions of a profile.
- * 
- * Note that methods are not static as a static method
- * can't be overriden, requiring to instantiate the class
- * to access them.
+ * Interface for defining a class as an AI.
+ * The only requirement for it is to be able to
+ * tell if it wins to a game.
  */
-public interface MemberProfile {
-    public int maxGames();
-    public boolean canOwnGames();
-    public int maxFriends();
-    /**
-     * Verifies if two player can befriend by looking
-     * at their properties and profile.
-     * @param p1 a player with this profile.
-     * @param p2 a player with any profile.
-     * @return
-     */
-    public boolean canBefriend(Player p1, Player p2);
+public interface GameAI {
+    public boolean wins();
 }
-
-// TODO implement x4

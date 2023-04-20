@@ -22,30 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.gamehub.user.profile;
-
-import com.gamehub.user.Player;
+package com.gamehub.user;
 
 /**
- * Template for creating registered player profiles.
- * Describes the permissions of a profile.
+ * Exception thrown when a friendship is not possible between
+ * two players.
  * 
- * Note that methods are not static as a static method
- * can't be overriden, requiring to instantiate the class
- * to access them.
+ * Dura lex sed lex.
  */
-public interface MemberProfile {
-    public int maxGames();
-    public boolean canOwnGames();
-    public int maxFriends();
-    /**
-     * Verifies if two player can befriend by looking
-     * at their properties and profile.
-     * @param p1 a player with this profile.
-     * @param p2 a player with any profile.
-     * @return
-     */
-    public boolean canBefriend(Player p1, Player p2);
-}
+public class IllegalFriendshipException extends Exception {
+    public IllegalFriendshipException() {
+        super();
+    }
 
-// TODO implement x4
+    public IllegalFriendshipException(String msg) {
+        super(msg);
+    }
+}

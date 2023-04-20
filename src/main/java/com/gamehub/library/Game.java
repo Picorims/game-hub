@@ -26,6 +26,7 @@ SOFTWARE.
 
 import java.util.ArrayList;
 
+import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.bot.Bot;
 
 /**
@@ -40,6 +41,7 @@ public class Game {
     private final String genre;
     private ArrayList<GameVersion> versions;
     private Bot bot;
+    private ArrayList<RegisteredPlayer> players;
 
     public Game(String name, String genre) {
         this.name = name;
@@ -54,5 +56,14 @@ public class Game {
 
     public void addBot(Bot bot) {
         this.bot = bot;
+    }
+
+    public void addPlayer(RegisteredPlayer p) {
+        this.players.add(p);
+    }
+
+    public void removePlayer(RegisteredPlayer p) {
+        players.remove(p);
+        // TODO delete game results
     }
 }

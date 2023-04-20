@@ -24,28 +24,16 @@ SOFTWARE.
 
 package com.gamehub.user.profile;
 
-import com.gamehub.user.Player;
-
 /**
- * Template for creating registered player profiles.
- * Describes the permissions of a profile.
- * 
- * Note that methods are not static as a static method
- * can't be overriden, requiring to instantiate the class
- * to access them.
+ * Exception thrown if a player gets a member profile that
+ * it should not be able to obtain.
  */
-public interface MemberProfile {
-    public int maxGames();
-    public boolean canOwnGames();
-    public int maxFriends();
-    /**
-     * Verifies if two player can befriend by looking
-     * at their properties and profile.
-     * @param p1 a player with this profile.
-     * @param p2 a player with any profile.
-     * @return
-     */
-    public boolean canBefriend(Player p1, Player p2);
-}
+public class IllegalProfileException extends Exception {
+    public IllegalProfileException() {
+        super();
+    }
 
-// TODO implement x4
+    public IllegalProfileException(String msg) {
+        super(msg);
+    }
+}

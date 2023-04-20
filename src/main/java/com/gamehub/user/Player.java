@@ -24,6 +24,9 @@ SOFTWARE.
 
 package com.gamehub.user;
 
+import com.gamehub.user.bot.Bot;
+import com.gamehub.user.profile.BotProfile;
+import com.gamehub.user.profile.IllegalProfileException;
 import com.gamehub.user.profile.MemberProfile;
 
 /**
@@ -31,15 +34,28 @@ import com.gamehub.user.profile.MemberProfile;
  * (registered players, bots, etc.)
  */
 public abstract class Player {
-    private final String username;
-    private MemberProfile memberProfile;
+    protected final String username;
+    protected MemberProfile memberProfile;
 
     public Player(String username) {
         this.username = username;
         this.memberProfile = null;
     }
 
-    public void setMemberProfile(MemberProfile profile) {
+    /**
+     * Defines the user profile.
+     * @param profile
+     * @throws IllegalProfileException if an attempt to assign an impossible profile is done.
+     */
+    public void setMemberProfile(MemberProfile profile) throws IllegalProfileException {
+        if (this instanceof Bot && !(profile instanceof BotProfile)) {
+            throw new IllegalProfileException("Bots can only have the bot profile.");
+        }
+
+        if (this instanceof RegisteredPlayer && (profile instanceof BotProfile)) {
+            throw new IllegalProfileException("Registered players can't have the bot profile.");
+        }
+
         this.memberProfile = profile;
     }
 }

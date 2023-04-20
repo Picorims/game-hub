@@ -26,12 +26,15 @@ package com.gamehub.library;
 
 import java.util.ArrayList;
 
+import com.gamehub.user.RegisteredPlayer;
+
 /**
  * Represents a device that can host games
  */
 public class Platform {
     private final String name;
     private ArrayList<GameVersion> gameVersions;
+    private ArrayList<RegisteredPlayer> players;
 
     Platform(String name) {
         this.name = name;
@@ -40,5 +43,13 @@ public class Platform {
 
     public void addGameVersion(GameVersion gameVersion) {
         gameVersions.add(gameVersion);
+    }
+
+    public void addPlayer(RegisteredPlayer p) {
+        players.add(p);
+    }
+
+    public void removePlayer(RegisteredPlayer p) {
+        players.remove(p);
     }
 }

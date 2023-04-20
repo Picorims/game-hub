@@ -28,22 +28,27 @@ import java.util.ArrayList;
 import com.gamehub.library.Game;
 import com.gamehub.user.Player;
 import com.gamehub.user.profile.BotProfile;
+import com.gamehub.user.profile.IllegalProfileException;
 
 /**
- * A bot can play against a player using an IA.
+ * A bot can play against a player using an AI.
  * It is associated to games that it supports.
  */
 public class Bot extends Player {
 
     private ArrayList<Game> games;
 
-    private ArrayList<GameIA> strategies;
+    private ArrayList<GameAI> strategies;
 
     public Bot(String username) {
         super(username);
-        setMemberProfile(new BotProfile());
+        try {
+            setMemberProfile(new BotProfile());
+        } catch (IllegalProfileException e) {
+            e.printStackTrace();
+        }
     }
     
     public void addGame(Game game) {games.add(game);}
-    public void addStrategy(GameIA ia) {strategies.add(ia);}
+    public void addStrategy(GameAI ai) {strategies.add(ai);}
 }

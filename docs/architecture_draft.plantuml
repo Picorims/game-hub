@@ -60,15 +60,6 @@ package gamehub {
 
 
     package user {
-        abstract class Player {
-            - username: String
-            - memberProfile: MemberProfile
-        }
-        GameHub "1..1 app" *-- "0..* players" Player
-
-
-
-
 
         package profile {
             interface MemberProfile {
@@ -97,20 +88,29 @@ package gamehub {
 
 
 
+        abstract class Player {
+            # username: String
+            # memberProfile: MemberProfile
+        }
+        GameHub "1..1 app" *-- "0..* players" Player
+        MemberProfile "1..1 profile" -- "0..n players" Player
+
+
+
+
+
         class RegisteredPlayer {
-            - email: String
-            - birthDate: Date
+            # email: String
+            # birthDate: Date
             --
-            + addFriend(p: Player)
-            + removeFriend(p: Player)
-            + getGame(g: Game)
+            + addFriend(p: RegisteredPlayer)
+            + removeFriend(p: RegisteredPlayer)
+            + obtainGame(g: Game)
             + offerGame(g: Game, p: RegisteredPlayer)
-            + playWithFriend(p: Player, g: Game)
             + deleteAccount()
         }
         Player <|-down- RegisteredPlayer
         RegisteredPlayer "0..n friends \n" -- "0..n friends" RegisteredPlayer
-        MemberProfile "1..1 profile" -- "0..n players" RegisteredPlayer
 
         note top of RegisteredPlayer
             addFriend(): kids stay with kids,
@@ -123,7 +123,8 @@ package gamehub {
 
         class Child {
             --
-            + addFriend(p: Player)
+            + addFriend(p: RegisteredPlayer)
+            + offerGame(g: Game, p: RegisteredPlayer)
         }
         Child "0..n children" --- "1..2 tutors" RegisteredPlayer
 
@@ -155,17 +156,17 @@ package gamehub {
 
 
 
-            interface GameIA {
+            interface GameAI {
                 + {abstract} wins(): Boolean
             }
-            Bot "0..n strategies" *--- "0..1 owner" GameIA
+            Bot "0..n strategies" *--- "0..1 owner" GameAI
 
-            class BasicGameIA {
+            class BasicGameAI {
                 - winProbability: Float
                 --
                 + wins(): Boolean
             }
-            GameIA <|-down- BasicGameIA
+            GameAI <|-down- BasicGameAI
         }
     }
 
@@ -179,7 +180,12 @@ package gamehub {
             - genre: String
             --
             + play(p1: Player, p2: Player)
+            + play(p1: Player)
         }
+        note top of Game
+            When playing, a single player provided means
+            playing with the bot.
+        end note
         RegisteredPlayer "0..n players (1)" ----- "0..n ownedGames (1)" Game: (1)
         Game "1..* games" -- "0..1 bot" Bot
 

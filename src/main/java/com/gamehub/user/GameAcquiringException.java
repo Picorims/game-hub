@@ -21,13 +21,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-package com.gamehub.user.bot;
+
+package com.gamehub.user;
 
 /**
- * Interface for defining a class as an IA.
- * The only requirement for it is to be able to
- * tell if it wins to a game.
+ * Exception thrown when a game cannot be acquired.
  */
-public interface GameIA {
-    public boolean wins();
+public class GameAcquiringException extends Exception {
+    public GameAcquiringException() {
+        super();
+    }
+
+    public GameAcquiringException(String msg) {
+        super(msg);
+    }
 }

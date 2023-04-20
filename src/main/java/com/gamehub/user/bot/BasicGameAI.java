@@ -27,21 +27,21 @@ package com.gamehub.user.bot;
 import java.util.Random;
 
 /**
- * IA that wins if a random value is greater than
+ * AI that wins if a random value is greater than
  * the win probability.
  */
-public class BasicGameIA implements GameIA {
+public class BasicGameAI implements GameAI {
     private static Random random = new Random();
     private float winProbability;
 
-    public BasicGameIA(float winProbability) {
+    public BasicGameAI(float winProbability) {
         this.winProbability = winProbability;
     }
 
     /**
      * Uses 0.5f as the default probability.
      */
-    public BasicGameIA() {
+    public BasicGameAI() {
         this(0.5f);
     }
 
@@ -56,10 +56,10 @@ public class BasicGameIA implements GameIA {
 
     public static void main(String[] args) {
         //tests
-        BasicGameIA ia = new BasicGameIA(0);
-        assert ia.wins();
-        ia.setWinProbability(1);
-        assert !ia.wins();
+        BasicGameAI ai = new BasicGameAI(0);
+        assert ai.wins();
+        ai.setWinProbability(1);
+        assert !ai.wins();
         System.out.println("BasicGameIA OK");
     }
     
