@@ -46,7 +46,6 @@ public class GameHub {
      * Store players based on their usernames.
      */
     private static HashMap<String, Player> players;
-    // TODO check for uniqueness upon account creation
 
     /**
      * Check if a username is available by checking if a player instance

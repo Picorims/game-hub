@@ -47,5 +47,3 @@ public interface MemberProfile {
      */
     public boolean canAskFriendship(Player sender, Player guest);
 }
-
-// TODO implement x4
