@@ -24,13 +24,15 @@ SOFTWARE.
 
 package com.gamehub.user;
 
-import java.util.Date;
+/**
+ * Exception thrown when an illegal operation on tutors is done.
+ */
+public class TutoringException extends Exception {
+    public TutoringException() {
+        super();
+    }
 
-import com.gamehub.library.Platform;
-
-public class Admin extends RegisteredPlayer {
-
-    public Admin() {
-        super("admin", "admin@gamehub.com", new Date(0), new Platform("N/A"));
+    public TutoringException(String msg) {
+        super(msg);
     }
 }

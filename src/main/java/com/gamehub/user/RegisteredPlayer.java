@@ -43,6 +43,7 @@ public class RegisteredPlayer extends Player {
     protected final Platform platform;
     protected ArrayList<RegisteredPlayer> friends;
     protected ArrayList<Game> games;
+    protected ArrayList<Child> children;
     
     public RegisteredPlayer(String username, String email, Date birthDate, Platform platform) {
         super(username);
@@ -57,6 +58,7 @@ public class RegisteredPlayer extends Player {
         platform.addPlayer(this);
         this.friends = new ArrayList<>();
         this.games = new ArrayList<>();
+        this.children = new ArrayList<>();
 
         try {
             setMemberProfile(new StandardProfile());
@@ -86,14 +88,14 @@ public class RegisteredPlayer extends Player {
     /**
      * Removes a friendship on both players if it exists.
      * @param p
-     * @throws IllegalStateException
+     * @throws IllegalFriendshipException
      */
-    public void removeFriend(RegisteredPlayer p) {
+    public void removeFriend(RegisteredPlayer p) throws IllegalFriendshipException {
         if (this.friends.contains(p) && p.friends.contains(this)) {
             this.friends.remove(p);
             p.friends.remove(this);
         } else {
-            throw new IllegalStateException("This friendship does not exist.");
+            throw new IllegalFriendshipException("This friendship does not exist.");
         }
     }
 
@@ -122,11 +124,31 @@ public class RegisteredPlayer extends Player {
     }
 
     public void deleteAccount() {
-        for (RegisteredPlayer f : friends) f.removeFriend(this);
+        for (RegisteredPlayer f : friends) {
+            try {
+                f.removeFriend(this);
+            } catch (IllegalFriendshipException e) {
+                System.err.println("Could not remove friendship between " + this.username + " and " + f.username + ".");
+            }
+        }
         for (Game g : games) g.removePlayer(this);
         platform.removePlayer(this);
-        // TODO tutors and children
     }
 
-    // TODO child + tutor method
+    /**
+     * Add a child to the player making it a tutor.
+     * @param child
+     * @throws TutoringException
+     */
+    protected void addChild(Child child) throws TutoringException {
+        if (child == null) throw new TutoringException("No child specified");
+        if (children.contains(child)) throw new TutoringException("The child already exists in the list.");
+        children.add(child);
+    }
+
+    protected void removeChild(Child child) throws TutoringException {
+        if (child == null) throw new TutoringException("No child specified");
+        if (!children.contains(child)) throw new TutoringException("The child does not exist in the list.");
+        children.remove(child);
+    }
 }

@@ -122,8 +122,6 @@ package gamehub {
 
 
         class Child {
-            --
-            + addFriend(p: RegisteredPlayer)
             + offerGame(g: Game, p: RegisteredPlayer)
         }
         Child "0..n children" --- "1..2 tutors" RegisteredPlayer
@@ -233,8 +231,8 @@ package gamehub {
 
 }
 
-
-
-
+note top of gamehub
+    For legibility reasons, getters, setters, add and remove methods are omitted.
+end note
 
 @enduml

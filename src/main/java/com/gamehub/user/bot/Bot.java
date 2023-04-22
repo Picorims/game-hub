@@ -51,4 +51,7 @@ public class Bot extends Player {
     
     public void addGame(Game game) {games.add(game);}
     public void addStrategy(GameAI ai) {strategies.add(ai);}
+
+    //TODO ternary relationship between bot, game and ai = bot options
+    // TODO list bots in gameub
 }
