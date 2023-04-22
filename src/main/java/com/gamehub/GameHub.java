@@ -24,12 +24,17 @@ SOFTWARE.
 
 package com.gamehub;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import com.gamehub.library.GameCollection;
+import com.gamehub.user.Admin;
 import com.gamehub.user.Player;
+import com.gamehub.user.RegisteredPlayer;
+import com.gamehub.user.bot.Bot;
 import com.gamehub.utils.Menu;
 import com.gamehub.utils.MenuException;
 import com.gamehub.utils.MenuOption;
@@ -40,8 +45,8 @@ import com.gamehub.utils.MenuOption;
  */
 public class GameHub {
 
-    private static boolean adminMode = false;
     private static GameCollection collection;
+    private static RegisteredPlayer loggedInUser;
     /**
      * Store players based on their usernames.
      */
@@ -68,9 +73,13 @@ public class GameHub {
         players.put(p.getUsername(), p);
     }
 
+    /**
+     * Menu displayed at start up
+     */
     private static void showMainMenu() {
         try {
             Menu.showMenu("What do you want to do?", new ArrayList<>(Arrays.asList(
+                new MenuOption("login", GameHub::login),
                 new MenuOption("quit", GameHub::quit)
             )));
         } catch (MenuException e) {
@@ -79,6 +88,43 @@ public class GameHub {
         }
     }
 
+    /**
+     * Login as a user or an admin
+     */
+    private static void login() {
+        String username = Menu.getInputString("username (back = '/b')");
+        
+        if (username.equals("admin")) {
+            // admin
+            loggedInUser = (Admin) players.get("admin");
+            // TODO admin menu
+            System.out.println("OK");
+
+        } else if (username.equals("/b")) {
+            // back
+            showMainMenu();
+
+        } else {
+            // user
+            Player potentialPlayer = players.get(username);
+            // valid ?
+            if (potentialPlayer == null || potentialPlayer instanceof Bot) {
+                // invalid
+                System.out.println("Invalid username.");
+                login();
+
+            } else {
+                // valid
+                loggedInUser = (RegisteredPlayer) potentialPlayer;
+                // TODO user menu
+                System.out.println("OK");
+            }
+        }
+    }
+
+    /**
+     * Terminate the application
+     */
     private static void quit() {
         System.out.println("Bye!");
     }
@@ -110,6 +156,20 @@ public class GameHub {
         // init
         collection = new GameCollection(args[0]);
         players = new HashMap<>();
+        new Admin(); // create the admin player and add it to players
+
+        // ===================== default state =====================
+        // ===================== default state =====================
+        // ===================== default state =====================
+        try {
+            new RegisteredPlayer("john", "john@example.com", Menu.parseDate("01/02/1993"), collection.gePlatform("PC"));
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        // =========================================================
+        // =========================================================
+        // =========================================================
         
         showMainMenu();
 

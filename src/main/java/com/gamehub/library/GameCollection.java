@@ -120,4 +120,8 @@ public class GameCollection {
 
         System.out.println("Loaded " + games.size() + " games and " + platforms.size() + " platforms.");
     }
+
+    public Platform gePlatform(String name) {
+        return platforms.get(name);
+    }
 }

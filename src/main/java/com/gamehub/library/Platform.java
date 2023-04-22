@@ -39,6 +39,7 @@ public class Platform {
     public Platform(String name) {
         this.name = name;
         gameVersions = new ArrayList<>();
+        players = new ArrayList<>();
     }
 
     public void addGameVersion(GameVersion gameVersion) {

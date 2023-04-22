@@ -24,8 +24,12 @@ SOFTWARE.
 
 package com.gamehub.utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -34,6 +38,7 @@ import java.util.Scanner;
  * and asking for user input.
  */
 public class Menu {
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
     // must not be closed or the input stream is closed
     // and unavailable until the program restarts.
     public static final Scanner scanner = new Scanner(System.in);
@@ -48,12 +53,11 @@ public class Menu {
     public static int getInputInt(String promptMsg, int min, int max) {
         int response = -1;
 
-        // open scanner (closes automatically)
         boolean invalid = true;
 
         // re-ask until the input is valid
         while (invalid) {
-            System.out.println(promptMsg + ":");
+            System.out.print(promptMsg + ": ");
             
             try {
                 response = scanner.nextInt();
@@ -68,6 +72,8 @@ public class Menu {
             if (invalid) System.out.println("invalid input!");
         }
 
+        scanner.nextLine(); // consume the \n not consumed by nextInt()
+
         return response;
     }
 
@@ -79,6 +85,37 @@ public class Menu {
      */
     public static int getInputInt(String promptMsg) {
         return getInputInt(promptMsg, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Ask the user for a string while the input is invalid
+     * and return the result
+     * @param promptMsg
+     * @return
+     */
+    public static String getInputString(String promptMsg) {
+        String response = null;
+
+        boolean invalid = true;
+
+        // re-ask until the input is valid
+        while (invalid) {
+            System.out.print(promptMsg + ": ");
+            
+            try {
+                response = scanner.nextLine();
+                invalid = false;
+            } catch (InputMismatchException e) {
+                invalid = true;
+                // empty the queue to not cause an infinite loop
+                // due to the invalid value not being consumed.
+                scanner.next();
+            }
+            
+            if (invalid) System.out.println("invalid input!");
+        }
+
+        return response;
     }
 
     /**
@@ -108,6 +145,18 @@ public class Menu {
         options.get(response).call();
     }
 
+    /**
+     * Parses a date string according to the app format.
+     * @param date
+     * @return the date object
+     * @throws ParseException
+     */
+    public static Date parseDate(String date) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        Date dateObj = dateFormat.parse(date);
+        return dateObj;
+    }
+
 
 
     /**
@@ -120,6 +169,9 @@ public class Menu {
 
         int w = getInputInt("test", -2, 2);
         System.out.println("=> " + w);
+
+        String s = getInputString("test str");
+        System.out.println("=> " + s);
 
         try {
             showMenu(null, null);

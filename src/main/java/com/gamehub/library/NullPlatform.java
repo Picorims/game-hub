@@ -22,15 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package com.gamehub.user;
+package com.gamehub.library;
 
-import java.util.Date;
+/**
+ * Value for an undefined platform
+ * (for use by an admin for example)
+ */
+public class NullPlatform extends Platform {
 
-import com.gamehub.library.NullPlatform;
-
-public class Admin extends RegisteredPlayer {
-
-    public Admin() {
-        super("admin", "admin@gamehub.com", new Date(0), new NullPlatform());
+    public NullPlatform() {
+        super("N/A");
     }
+    
 }
