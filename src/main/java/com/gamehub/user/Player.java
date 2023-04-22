@@ -24,6 +24,8 @@ SOFTWARE.
 
 package com.gamehub.user;
 
+import java.util.ArrayList;
+
 import com.gamehub.user.bot.Bot;
 import com.gamehub.user.profile.BotProfile;
 import com.gamehub.user.profile.IllegalProfileException;
@@ -36,10 +38,40 @@ import com.gamehub.user.profile.MemberProfile;
 public abstract class Player {
     protected final String username;
     protected MemberProfile memberProfile;
+    protected ArrayList<Player> friends;
 
     public Player(String username) {
         this.username = username;
         this.memberProfile = null;
+        this.friends = new ArrayList<>();
+    }
+
+    /**
+     * Adds p as a friend if players are allowed to do so.
+     * @param p
+     * @throws IllegalFriendshipException
+     */
+    public void addFriend(Player p) throws IllegalFriendshipException {
+        if (this.memberProfile.canAskFriendship(this, p)) {
+            this.friends.add(p);
+            p.friends.add(this);
+        } else {
+            throw new IllegalFriendshipException("The profile do not allow this friendship.");
+        }
+    }
+
+    /**
+     * Removes a friendship on both players if it exists.
+     * @param p
+     * @throws IllegalFriendshipException
+     */
+    public void removeFriend(Player p) throws IllegalFriendshipException {
+        if (this.friends.contains(p) && p.friends.contains(this)) {
+            this.friends.remove(p);
+            p.friends.remove(this);
+        } else {
+            throw new IllegalFriendshipException("This friendship does not exist.");
+        }
     }
 
     /**

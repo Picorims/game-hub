@@ -24,7 +24,10 @@ SOFTWARE.
 
 package com.gamehub.user.profile;
 
+import com.gamehub.user.Child;
 import com.gamehub.user.Player;
+import com.gamehub.user.RegisteredPlayer;
+import com.gamehub.user.bot.Bot;
 
 public class StandardProfile implements MemberProfile {
 
@@ -44,9 +47,16 @@ public class StandardProfile implements MemberProfile {
     }
 
     @Override
-    public boolean canBefriend(Player p1, Player p2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canBefriend'");
+    public boolean canAskFriendship(Player sender, Player guest) {
+        if (sender instanceof RegisteredPlayer && guest instanceof Child) {
+            RegisteredPlayer senderP = (RegisteredPlayer) sender;
+            Child guestC = (Child) guest;
+
+            return senderP.hasChild(guestC);
+        } else {
+            return (sender instanceof RegisteredPlayer
+                    && (guest instanceof RegisteredPlayer || guest instanceof Bot));
+        }
     }
 
 }

@@ -44,9 +44,7 @@ public class BotProfile implements MemberProfile {
     }
 
     @Override
-    public boolean canBefriend(Player p1, Player p2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canBefriend'");
+    public boolean canAskFriendship(Player sender, Player guest) {
+        return false;
     }
-
 }

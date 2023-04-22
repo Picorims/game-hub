@@ -24,6 +24,7 @@ SOFTWARE.
 
 package com.gamehub.user.profile;
 
+import com.gamehub.user.Child;
 import com.gamehub.user.Player;
 
 public class KidProfile implements MemberProfile {
@@ -44,9 +45,8 @@ public class KidProfile implements MemberProfile {
     }
 
     @Override
-    public boolean canBefriend(Player p1, Player p2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canBefriend'");
+    public boolean canAskFriendship(Player sender, Player guest) {
+        return (sender instanceof Child && guest instanceof Child);
     }
 
 }

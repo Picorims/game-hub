@@ -66,7 +66,7 @@ package gamehub {
                 + {abstract} maxGames(): int
                 + {abstract} canOwnGames(): boolean
                 + {abstract} maxFriends(): int
-                + {abstract} canBefriend(p1: Player, p2: Player): boolean
+                + {abstract} canAskFriendship(sender: Player, guest: Player): boolean
             }
 
             note top of MemberProfile
@@ -91,9 +91,13 @@ package gamehub {
         abstract class Player {
             # username: String
             # memberProfile: MemberProfile
+            --
+            + addFriend(p: RegisteredPlayer)
+            + removeFriend(p: RegisteredPlayer)
         }
         GameHub "1..1 app" *-- "0..* players" Player
         MemberProfile "1..1 profile" <--x "0..n players" Player
+        Player "0..n friends \n" -- "0..n friends" Player
 
 
 
@@ -103,14 +107,11 @@ package gamehub {
             # email: String
             # birthDate: Date
             --
-            + addFriend(p: RegisteredPlayer)
-            + removeFriend(p: RegisteredPlayer)
             + obtainGame(g: Game)
             + offerGame(g: Game, p: RegisteredPlayer)
             + deleteAccount()
         }
         Player <|-down- RegisteredPlayer
-        RegisteredPlayer "0..n friends \n" -- "0..n friends" RegisteredPlayer
 
         note top of RegisteredPlayer
             addFriend(): kids stay with kids,
@@ -234,7 +235,8 @@ package gamehub {
 }
 
 note top of gamehub
-    For legibility reasons, getters, setters, add and remove methods are omitted.
+    For legibility reasons, getters, setters, add, remove
+    and has methods are omitted.
 end note
 
 @enduml

@@ -41,11 +41,11 @@ public interface MemberProfile {
     /**
      * Verifies if two player can befriend by looking
      * at their properties and profile.
-     * @param p1 a player with this profile.
-     * @param p2 a player with any profile.
+     * @param sender a player with this profile.
+     * @param guest a player with any profile.
      * @return
      */
-    public boolean canBefriend(Player p1, Player p2);
+    public boolean canAskFriendship(Player sender, Player guest);
 }
 
 // TODO implement x4

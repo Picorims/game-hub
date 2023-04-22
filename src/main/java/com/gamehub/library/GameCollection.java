@@ -56,7 +56,6 @@ public class GameCollection {
 
     private HashMap<String, Game> games;
     private HashMap<String, Platform> platforms;
-    // TODO game results
     
     /**
      * Parses the CSV and creates the game collection

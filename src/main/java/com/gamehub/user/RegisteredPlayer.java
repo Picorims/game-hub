@@ -40,7 +40,6 @@ public class RegisteredPlayer extends Player {
     protected final String email;
     protected final Date birthDate;
     protected final Platform platform;
-    protected ArrayList<RegisteredPlayer> friends;
     protected ArrayList<Game> games;
     protected ArrayList<Child> children;
     
@@ -55,7 +54,6 @@ public class RegisteredPlayer extends Player {
         this.birthDate = birthDate;
         this.platform = platform;
         platform.addPlayer(this);
-        this.friends = new ArrayList<>();
         this.games = new ArrayList<>();
         this.children = new ArrayList<>();
 
@@ -68,34 +66,6 @@ public class RegisteredPlayer extends Player {
 
     public RegisteredPlayer(String username, String email, Date birthDate) {
         this(username, email, birthDate, null);
-    }
-
-    /**
-     * Adds p as a friend if players are allowed to do so.
-     * @param p
-     * @throws IllegalFriendshipException
-     */
-    public void addFriend(RegisteredPlayer p) throws IllegalFriendshipException {
-        if (this.memberProfile.canBefriend(this, p)) {
-            this.friends.add(p);
-            p.friends.add(this);
-        } else {
-            throw new IllegalFriendshipException("The profile do not allow this friendship.");
-        }
-    }
-
-    /**
-     * Removes a friendship on both players if it exists.
-     * @param p
-     * @throws IllegalFriendshipException
-     */
-    public void removeFriend(RegisteredPlayer p) throws IllegalFriendshipException {
-        if (this.friends.contains(p) && p.friends.contains(this)) {
-            this.friends.remove(p);
-            p.friends.remove(this);
-        } else {
-            throw new IllegalFriendshipException("This friendship does not exist.");
-        }
     }
 
     /**
@@ -123,7 +93,7 @@ public class RegisteredPlayer extends Player {
     }
 
     public void deleteAccount() {
-        for (RegisteredPlayer f : friends) {
+        for (Player f : friends) {
             try {
                 f.removeFriend(this);
             } catch (IllegalFriendshipException e) {
@@ -149,5 +119,9 @@ public class RegisteredPlayer extends Player {
         if (child == null) throw new TutoringException("No child specified");
         if (!children.contains(child)) throw new TutoringException("The child does not exist in the list.");
         children.remove(child);
+    }
+
+    public boolean hasChild(Child c) {
+        return this.children.contains(c);
     }
 }
