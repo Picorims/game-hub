@@ -36,22 +36,29 @@ MainMenu --> [*]: quit
 Login --> LoggedInMenu: logged in [user type]
 Login --> MainMenu: back
 
-state LoggedInMenu {
+state LoggedInMenu #113355 {
+    state logout <<exitPoint>>
+
     state loginChoice <<choice>>
     [*] --> loginChoice
     loginChoice --> UserMenu: [user type = user]
     loginChoice --> AdminMenu: [user type = admin]
 
-    AdminMenu --> [*]: logout
+    state AdminMenu #113355
+    AdminMenu --> logout: logout
     AdminMenu --> CreateBot: create bot
+    AdminMenu --> [*]
 
     CreateBot --> AdminMenu: back
 
-    state UserMenu {
+    state UserMenu #113355 {
         state userChoice <<choice>>
         userChoice --> ChildMenu: [user type = child]
         userChoice --> AdultMenu: [user type = adult]
 
+        state ChildMenu #113355
+
+        state AdultMenu #113355
         AdultMenu --> AddTutor: add tutor
 
         AddTutor --> AdultMenu: back
@@ -59,10 +66,11 @@ state LoggedInMenu {
     UserMenu --> AddFriend: invite
     UserMenu --> RemoveFriend: invite
     UserMenu -up-> GetGame: get game
-    UserMenu --> [*]: logout
+    UserMenu --> logout: logout
     UserMenu --> ConfirmationScreen: delete account
+    UserMenu --> [*]
 
-    ConfirmationScreen --> [*]: confirm
+    ConfirmationScreen --> logout: confirm
 
     GetGame --> UserMenu: back
 
@@ -70,11 +78,15 @@ state LoggedInMenu {
 
     RemoveFriend --> UserMenu: back
 }
-LoggedInMenu --> MainMenu: logout
+logout --> MainMenu: logout
 LoggedInMenu --> ShowUserInfo: show user info
 LoggedInMenu --> ShowGameInfo: show game info
 LoggedInMenu --> AddPlayer: add player [not a child]
 LoggedInMenu --> Play: play
+
+note right of LoggedInMenu
+    An exit point must be taken to leave this state.
+end note
 
 ShowUserInfo: <b>Entry</b> [user type = admin or adult] / show all
 ShowUserInfo: <b>Entry</b> [user type = child] / show restricted
