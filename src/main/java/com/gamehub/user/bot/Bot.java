@@ -24,6 +24,7 @@ SOFTWARE.
 package com.gamehub.user.bot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.gamehub.library.Game;
 import com.gamehub.user.Player;
@@ -37,8 +38,12 @@ import com.gamehub.user.profile.IllegalProfileException;
 public class Bot extends Player {
 
     private ArrayList<Game> games;
-
     private ArrayList<GameAI> strategies;
+    /**
+     * Each entry is a list of AI available for the said game,
+     * that can be played by the bot.
+     */
+    private HashMap<Game, ArrayList<GameAI>> gameOptions;
 
     public Bot(String username) {
         super(username);
@@ -52,6 +57,30 @@ public class Bot extends Player {
     public void addGame(Game game) {games.add(game);}
     public void addStrategy(GameAI ai) {strategies.add(ai);}
 
-    //TODO ternary relationship between bot, game and ai = bot options
+    /**
+     * Add an AI for a given game. A game can have multiple AIs.
+     * @param game
+     * @param ai
+     * @throws IllegalGameOptionException
+     */
+    public void addGameOption(Game game, GameAI ai) throws IllegalGameOptionException {
+        if (game == null || ai == null) {
+            throw new IllegalArgumentException("parameters can't be null");
+        }
+        
+        if (!games.contains(game) || !strategies.contains(ai)) {
+            throw new IllegalGameOptionException("The bot do not own either the game or the ai.");
+        }
+
+        if (gameOptions.get(game) == null) {
+            gameOptions.put(game, new ArrayList<>());
+        }
+        gameOptions.get(game).add(ai);
+    }
+
+    public ArrayList<GameAI> getGameOptions(Game game) {
+        return (ArrayList<GameAI>) gameOptions.get(game).clone();
+    }
+
     // TODO list bots in gameub
 }

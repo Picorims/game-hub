@@ -45,7 +45,7 @@ package gamehub {
             + MenuOption(title: String, action: Action)
             + call()
         }
-        MenuOption "1..1 option" --- "1..1 action" Action
+        MenuOption "1..1 option" x---> "1..1 action" Action
 
         class Menu {
             - scanner: Scanner
@@ -153,16 +153,25 @@ package gamehub {
 
 
             interface GameAI {
+                + {abstract} getName(): String
                 + {abstract} wins(): Boolean
             }
             Bot "0..n strategies" *--- "0..1 owner" GameAI
 
             class BasicGameAI {
                 - winProbability: Float
+                - name: String
                 --
                 + wins(): Boolean
             }
             GameAI <|-down- BasicGameAI
+
+
+
+
+            <> botDiamond
+            Bot "1..1 bot" x.. "botOption" botDiamond
+            GameAI "1..n ai" <-- botDiamond
         }
     }
 
@@ -175,15 +184,17 @@ package gamehub {
             - name: String
             - genre: String
             --
-            + play(p1: Player, p2: Player)
-            + play(p1: Player)
+            + play(p1: Player, p2: Player): boolean
+            + play(p1: Player): boolean
         }
         note top of Game
             When playing, a single player provided means
             playing with the bot.
+            The play function returns if p1 wins.
         end note
         RegisteredPlayer "0..n players (1)" -- "0..n ownedGames (1)" Game: (1)
-        Game "1..* games" -- "0..1 bot" Bot
+        Game "1..* games (11)" -- "0..1 bot (11)" Bot: (11)
+        Game "1..1 game" <-- botDiamond
 
 
 
@@ -203,7 +214,7 @@ package gamehub {
         class GameResult {}
         GameResult "0..n results (2)" ----- "1..1 game (2)" Game: (2)
         <> playerDiamond
-        GameResult "0..n results (3)" x-- playerDiamond: (3)
+        GameResult "0..n results (3)" x.. playerDiamond: (3)
         playerDiamond --> "1..1 winner (4)" RegisteredPlayer: (4)
         playerDiamond --> "1..1 loser (4b)" RegisteredPlayer: (4b)
         note top of GameResult

@@ -24,50 +24,15 @@ SOFTWARE.
 
 package com.gamehub.user.bot;
 
-import java.util.Random;
-
 /**
- * AI that wins if a random value is greater than
- * the win probability.
+ * Exception thrown if a game option can't be created.
  */
-public class BasicGameAI implements GameAI {
-    private static Random random = new Random();
-    private float winProbability;
-    private final String name;
-
-    public BasicGameAI(float winProbability, String name) {
-        this.winProbability = winProbability;
-        this.name = name;
+public class IllegalGameOptionException extends Exception {
+    public IllegalGameOptionException() {
+        super();
     }
 
-    /**
-     * Uses 0.5f as the default probability.
-     */
-    public BasicGameAI(String name) {
-        this(0.5f, name);
+    public IllegalGameOptionException(String msg) {
+        super(msg);
     }
-
-    public void setWinProbability(float winProbability) {
-        this.winProbability = winProbability;
-    }
-
-    @Override
-    public boolean wins() {
-        return random.nextFloat() >= winProbability;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public static void main(String[] args) {
-        // tests
-        BasicGameAI ai = new BasicGameAI(0, "basic ai");
-        assert ai.wins();
-        ai.setWinProbability(1);
-        assert !ai.wins();
-        System.out.println("BasicGameIA OK");
-    }
-
 }

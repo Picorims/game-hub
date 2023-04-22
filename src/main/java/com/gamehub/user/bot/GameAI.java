@@ -30,4 +30,5 @@ package com.gamehub.user.bot;
  */
 public interface GameAI {
     public boolean wins();
+    public String getName();
 }
