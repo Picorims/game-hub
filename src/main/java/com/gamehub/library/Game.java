@@ -42,12 +42,15 @@ public class Game {
     private ArrayList<GameVersion> versions;
     private Bot bot;
     private ArrayList<RegisteredPlayer> players;
+    private ArrayList<GameResult> results;
 
     public Game(String name, String genre) {
         this.name = name;
         this.genre = genre;
         versions = new ArrayList<>();
         this.bot = null;
+        players = new ArrayList<>();
+        results = new ArrayList<>();
     }
 
     public void addGameVersion(GameVersion version) {
@@ -62,8 +65,24 @@ public class Game {
         this.players.add(p);
     }
 
+    /**
+     * Note that removing a player remove its associated
+     * game results.
+     * @param p
+     */
     public void removePlayer(RegisteredPlayer p) {
         players.remove(p);
-        // TODO delete game results
+
+        // remove game results containing the player
+        for (int i = results.size(); i >= 0; i--) {
+            GameResult result = results.get(i);
+            if (result.getWinner() == p || result.getLoser() == p) {
+                results.remove(result);
+            }
+        }
+    }
+
+    public void addGameResult(GameResult g) {
+        results.add(g);
     }
 }

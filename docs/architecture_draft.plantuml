@@ -93,7 +93,7 @@ package gamehub {
             # memberProfile: MemberProfile
         }
         GameHub "1..1 app" *-- "0..* players" Player
-        MemberProfile "1..1 profile" -- "0..n players" Player
+        MemberProfile "1..1 profile" <--x "0..n players" Player
 
 
 
@@ -181,7 +181,7 @@ package gamehub {
             When playing, a single player provided means
             playing with the bot.
         end note
-        RegisteredPlayer "0..n players (1)" ----- "0..n ownedGames (1)" Game: (1)
+        RegisteredPlayer "0..n players (1)" -- "0..n ownedGames (1)" Game: (1)
         Game "1..* games" -- "0..1 bot" Bot
 
 
@@ -201,8 +201,10 @@ package gamehub {
 
         class GameResult {}
         GameResult "0..n results (2)" ----- "1..1 game (2)" Game: (2)
-        GameResult "0..n results (3)" ---- "2..2 players (3)" Player: (3)
-        GameResult "0..n wins (4)" ---- "1..1 winner (4)" Player: (4)
+        <> playerDiamond
+        GameResult "0..n results (3)" x-- playerDiamond: (3)
+        playerDiamond --> "1..1 winner (4)" RegisteredPlayer: (4)
+        playerDiamond --> "1..1 loser (4b)" RegisteredPlayer: (4b)
         note top of GameResult
             only for player-player results.
         end note

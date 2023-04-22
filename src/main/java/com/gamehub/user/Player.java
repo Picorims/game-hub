@@ -24,7 +24,6 @@ SOFTWARE.
 
 package com.gamehub.user;
 
-import com.gamehub.GameHub;
 import com.gamehub.user.bot.Bot;
 import com.gamehub.user.profile.BotProfile;
 import com.gamehub.user.profile.IllegalProfileException;

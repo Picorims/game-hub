@@ -30,7 +30,6 @@ import java.util.Date;
 import com.gamehub.library.Game;
 import com.gamehub.library.Platform;
 import com.gamehub.user.profile.IllegalProfileException;
-import com.gamehub.user.profile.MemberProfile;
 import com.gamehub.user.profile.StandardProfile;
 
 /**
