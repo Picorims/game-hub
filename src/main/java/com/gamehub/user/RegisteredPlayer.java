@@ -46,6 +46,11 @@ public class RegisteredPlayer extends Player {
     
     public RegisteredPlayer(String username, String email, Date birthDate, Platform platform) {
         super(username);
+        if (platform == null) throw new IllegalArgumentException("platform must be defined.");
+        if (birthDate == null) throw new IllegalArgumentException("birth date must be defined.");
+        if (username == null || username == "") throw new IllegalArgumentException("username must be defined.");
+        if (email == null || email == "") throw new IllegalArgumentException("email must be defined.");
+        // for simplicity, it is not checked if an email is valid, nor if a username is unique.
         this.email = email;
         this.birthDate = birthDate;
         this.platform = platform;
@@ -58,6 +63,10 @@ public class RegisteredPlayer extends Player {
         } catch (IllegalProfileException e) {
             e.printStackTrace();
         }
+    }
+
+    public RegisteredPlayer(String username, String email, Date birthDate) {
+        this(username, email, birthDate, null);
     }
 
     /**
@@ -119,5 +128,5 @@ public class RegisteredPlayer extends Player {
         // TODO tutors and children
     }
 
-    // TODO admin + child + tutor method
+    // TODO child + tutor method
 }

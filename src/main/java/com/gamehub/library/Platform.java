@@ -36,7 +36,7 @@ public class Platform {
     private ArrayList<GameVersion> gameVersions;
     private ArrayList<RegisteredPlayer> players;
 
-    Platform(String name) {
+    public Platform(String name) {
         this.name = name;
         gameVersions = new ArrayList<>();
     }

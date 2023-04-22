@@ -26,8 +26,10 @@ package com.gamehub;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import com.gamehub.library.GameCollection;
+import com.gamehub.user.Player;
 import com.gamehub.utils.Menu;
 import com.gamehub.utils.MenuException;
 import com.gamehub.utils.MenuOption;
@@ -40,6 +42,11 @@ public class GameHub {
 
     private static boolean adminMode = false;
     private static GameCollection collection;
+    /**
+     * Store players based on their usernames.
+     */
+    private static HashMap<String, Player> players;
+    // TODO check for uniqueness upon account creation
 
     private static void showMainMenu() {
         try {
@@ -79,7 +86,11 @@ public class GameHub {
 
         """);
         System.out.println("Loading...");
+        
+        // init
         collection = new GameCollection(args[0]);
+        players = new HashMap<>();
+        
         showMainMenu();
 
         // TODO menu state machine

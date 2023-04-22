@@ -138,10 +138,7 @@ package gamehub {
 
 
 
-        class Admin {
-            --
-            + addBot()
-        }
+        class Admin {}
         RegisteredPlayer <|-- Admin
 
 
