@@ -17,6 +17,7 @@ package gamehub {
         - {static} adminMode: Boolean = false
         - {static} loggedInPlayer: RegisteredPlayer
         --
+        + {static} usernameAvailable(username: String): boolean
         - {static} login(asAdmin: Boolean)
         - {static} createPlayer()
         - {static} showPlayerInfo(p: Player)
@@ -95,7 +96,7 @@ package gamehub {
             + addFriend(p: RegisteredPlayer)
             + removeFriend(p: RegisteredPlayer)
         }
-        GameHub "1..1 app" *-- "0..* players" Player
+        GameHub "1..1 app" -- "0..* players" Player
         MemberProfile "1..1 profile" <--x "0..n players" Player
         Player "0..n friends \n" -- "0..n friends" Player
 
@@ -231,7 +232,7 @@ package gamehub {
         }
         GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
         GameCollection "1..1 collection (10)" ----- "0..n platforms (10)" Platform: (10)
-        GameHub "1..1 app" *--- "1..1 collection" GameCollection
+        GameHub "1..1 app" --- "1..1 collection" GameCollection
 
 
 

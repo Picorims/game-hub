@@ -81,6 +81,4 @@ public class Bot extends Player {
     public ArrayList<GameAI> getGameOptions(Game game) {
         return (ArrayList<GameAI>) gameOptions.get(game).clone();
     }
-
-    // TODO list bots in gameub
 }

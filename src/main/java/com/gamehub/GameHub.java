@@ -48,6 +48,27 @@ public class GameHub {
     private static HashMap<String, Player> players;
     // TODO check for uniqueness upon account creation
 
+    /**
+     * Check if a username is available by checking if a player instance
+     * (bot or real player) has this username.
+     * @param username
+     * @return
+     */
+    public static boolean usernameAvailable(String username) {
+        return players.get(username) == null;
+    }
+
+    /**
+     * Adds a player to the user base.
+     * If the overname is taken, its value is overwritten.
+     * Check for availability using `usernameAvailable()`.
+     * @param p the player to add
+     */
+    public static void addPlayer(Player p) {
+        if (p == null) throw new IllegalArgumentException("The parameter can't be null");
+        players.put(p.getUsername(), p);
+    }
+
     private static void showMainMenu() {
         try {
             Menu.showMenu("What do you want to do?", new ArrayList<>(Arrays.asList(

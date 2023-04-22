@@ -26,6 +26,7 @@ package com.gamehub.user;
 
 import java.util.ArrayList;
 
+import com.gamehub.GameHub;
 import com.gamehub.user.bot.Bot;
 import com.gamehub.user.profile.BotProfile;
 import com.gamehub.user.profile.IllegalProfileException;
@@ -39,11 +40,20 @@ public abstract class Player {
     protected final String username;
     protected MemberProfile memberProfile;
     protected ArrayList<Player> friends;
-
+    
     public Player(String username) {
+        if (username == null) throw new IllegalArgumentException("A username must be specified");
+        if (!GameHub.usernameAvailable(username)) {
+            throw new IllegalArgumentException("Username taken: " + username);
+        }
         this.username = username;
         this.memberProfile = null;
         this.friends = new ArrayList<>();
+        GameHub.addPlayer(this);
+    }
+    
+    public String getUsername() {
+        return username;
     }
 
     /**
