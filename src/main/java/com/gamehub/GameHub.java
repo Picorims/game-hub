@@ -468,7 +468,7 @@ public class GameHub {
             p3.obtainGame(minecraft); // 240
 
             RegisteredPlayer p4 = new Child("jessica", "jessica@example.com", Menu.parseDate("08/11/2007"), collection.getPlatform("PS4"), p1);
-            p3.obtainGame(minecraft); // 240
+            p4.obtainGame(minecraft); // 240
 
             new GameResult(minecraft, p1, p3);
             new GameResult(minecraft, p2, p1);
@@ -478,6 +478,7 @@ public class GameHub {
         } catch (ParseException | GameAcquiringException | GameResultException | TutoringException e) {
             System.out.println("incoherent test data.");
             e.printStackTrace();
+            System.exit(-1);
         }
         // =========================================================
         // =========================================================

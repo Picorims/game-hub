@@ -75,13 +75,20 @@ public class RegisteredPlayer extends Player {
      * @throws GameAcquiringException
      */
     public void obtainGame(Game g) throws GameAcquiringException {
-        if (this.games.size() < this.memberProfile.maxGames()) {
-            // TODO test if platform match!
-            this.games.add(g);
-            g.addPlayer(this);
-        } else {
+        if (this.games.size() >= this.memberProfile.maxGames()) {
             throw new GameAcquiringException("Trying to give a game while the limit has been reached.");
         }
+        
+        if (!g.supportsPlatform(this.platform)) {
+            throw new GameAcquiringException("The game do not support the player's platform.");
+        }
+
+        if (games.contains(g)) {
+            throw new GameAcquiringException("The player already own this game.");
+        }
+
+        this.games.add(g);
+        g.addPlayer(this);
     }
 
     /**
