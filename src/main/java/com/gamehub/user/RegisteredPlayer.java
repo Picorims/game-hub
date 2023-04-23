@@ -27,6 +27,7 @@ package com.gamehub.user;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.gamehub.GameHub;
 import com.gamehub.library.Game;
 import com.gamehub.library.Platform;
 import com.gamehub.user.profile.IllegalProfileException;
@@ -78,7 +79,7 @@ public class RegisteredPlayer extends Player {
         if (this.games.size() >= this.memberProfile.maxGames()) {
             throw new GameAcquiringException("Trying to give a game while the limit has been reached.");
         }
-        
+
         if (!g.supportsPlatform(this.platform)) {
             throw new GameAcquiringException("The game do not support the player's platform.");
         }
@@ -102,7 +103,8 @@ public class RegisteredPlayer extends Player {
     }
 
     public void deleteAccount() {
-        for (Player f : friends) {
+        for (int i = friends.size() - 1; i >= 0; i--) {
+            Player f = friends.get(i);
             try {
                 f.removeFriend(this);
             } catch (IllegalFriendshipException e) {
@@ -111,6 +113,7 @@ public class RegisteredPlayer extends Player {
         }
         for (Game g : games) g.removePlayer(this);
         platform.removePlayer(this);
+        GameHub.removePlayer(this);
     }
 
     /**

@@ -78,7 +78,7 @@ public class Game {
         players.remove(p);
 
         // remove game results containing the player
-        for (int i = results.size(); i >= 0; i--) {
+        for (int i = results.size() - 1; i >= 0; i--) {
             GameResult result = results.get(i);
             if (result.getWinner() == p || result.getLoser() == p) {
                 results.remove(result);

@@ -73,15 +73,12 @@ state LoggedInMenu #113355 {
     UserMenu --> [*]
 
     ConfirmationScreen --> logout: confirm
-    ConfirmationScreen: TODO
 
     GetGame --> UserMenu: back
 
     AddFriend --> UserMenu: back
-    AddFriend: TODO
 
     RemoveFriend --> UserMenu: back
-    RemoveFriend: TODO
 }
 logout --> MainMenu: logout
 LoggedInMenu --> ShowUserInfoMenu: show user info

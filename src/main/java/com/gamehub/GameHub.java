@@ -96,6 +96,11 @@ public class GameHub {
         players.put(p.getUsername(), p);
     }
 
+    public static void removePlayer(Player p) {
+        if (p == null) throw new IllegalArgumentException("The parameter can't be null");
+        players.put(p.getUsername(), null);
+    }
+
     public static RegisteredPlayer getLoggedInUser() {
         return loggedInUser;
     }
@@ -184,6 +189,7 @@ public class GameHub {
         if (!(loggedInUser instanceof Admin)) {
             menuOptions.add(new MenuOption("add a friend", GameHub::addFriend));
             menuOptions.add(new MenuOption("remove a friend", GameHub::removeFriend));
+            menuOptions.add(new MenuOption("delete account", GameHub::deleteAccount));
         }
         
         menuOptions.add(new MenuOption("logout", GameHub::logout));
@@ -381,6 +387,23 @@ public class GameHub {
                 showLoggedInMenu();
             }
         }
+    }
+
+    /**
+     * Remove the logged in user from the database
+     */
+    private static void deleteAccount() {
+        Menu.showMenu(
+            "Are you sure you want to delete the account for " + loggedInUser.getUsername() + "?",
+            new ArrayList<>(Arrays.asList(
+                new MenuOption("yes", () -> {
+                    loggedInUser.deleteAccount();
+                    System.out.println("account deleted, logging out...");
+                    logout();            
+                }),
+                new MenuOption("no", GameHub::showLoggedInMenu)
+            ))
+        );
     }
 
 
