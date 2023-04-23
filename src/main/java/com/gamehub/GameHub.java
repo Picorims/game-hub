@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import com.gamehub.library.Game;
@@ -41,6 +40,7 @@ import com.gamehub.library.Platform;
 import com.gamehub.user.Admin;
 import com.gamehub.user.Child;
 import com.gamehub.user.GameAcquiringException;
+import com.gamehub.user.IllegalFriendshipException;
 import com.gamehub.user.Player;
 import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.TutoringException;
@@ -172,12 +172,20 @@ public class GameHub {
         // shared options
         menuOptions.add(new MenuOption("show game information", GameHub::showGameInfoMenu));
         menuOptions.add(new MenuOption("show player information", GameHub::showPlayerInfoMenu));
+        
         if (!(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("create a player", GameHub::createPlayer));
         }
+        
         if (!(loggedInUser instanceof Admin) && !(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("obtain a game", GameHub::getGame));
         }
+
+        if (!(loggedInUser instanceof Admin)) {
+            menuOptions.add(new MenuOption("add a friend", GameHub::addFriend));
+            menuOptions.add(new MenuOption("remove a friend", GameHub::removeFriend));
+        }
+        
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
@@ -334,6 +342,57 @@ public class GameHub {
     }
 
     /**
+     * Add a friend to the logged in user
+     */
+    private static void addFriend() {
+        RegisteredPlayer friend = selectPlayer();
+        if (friend == null) {
+            System.out.println("No player available.");
+            showLoggedInMenu();
+        } else {
+            try {
+                loggedInUser.addFriend(friend);
+                System.out.println("added " + friend.getUsername() + " as a friend.");
+            } catch (IllegalFriendshipException e) {
+                System.out.println("Could not add " + friend.getUsername() + " as a friend:");
+                System.out.println(e.getMessage());
+            } finally {
+                showLoggedInMenu();
+            }
+        }
+    }
+
+    /**
+     * Remove a friend from the logged in user
+     */
+    private static void removeFriend() {
+        RegisteredPlayer friend = selectPlayer();
+        if (friend == null) {
+            System.out.println("No player available.");
+            showLoggedInMenu();
+        } else {
+            try {
+                loggedInUser.removeFriend(friend);
+                System.out.println("removed " + friend.getUsername() + " as a friend.");
+            } catch (IllegalFriendshipException e) {
+                System.out.println("Could not remove " + friend.getUsername() + " as a friend:");
+                System.out.println(e.getMessage());
+            } finally {
+                showLoggedInMenu();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
      * Select a platform from the list of available platforms through a menu.
      * @return
      */
@@ -416,6 +475,15 @@ public class GameHub {
         return selectGame(new NullPlatform());
     }
 
+
+
+
+
+
+
+
+
+
     /**
      * Terminate the application
      */
@@ -475,7 +543,9 @@ public class GameHub {
             new GameResult(minecraft, p2, p3);
             new GameResult(minecraft, p4, p1);
 
-        } catch (ParseException | GameAcquiringException | GameResultException | TutoringException e) {
+            p1.addFriend(p2);
+
+        } catch (ParseException | GameAcquiringException | GameResultException | TutoringException | IllegalFriendshipException e) {
             System.out.println("incoherent test data.");
             e.printStackTrace();
             System.exit(-1);

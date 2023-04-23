@@ -62,12 +62,16 @@ public abstract class Player {
      * @throws IllegalFriendshipException
      */
     public void addFriend(Player p) throws IllegalFriendshipException {
-        if (this.memberProfile.canAskFriendship(this, p)) {
-            this.friends.add(p);
-            p.friends.add(this);
-        } else {
+        if (!this.memberProfile.canAskFriendship(this, p)) {
             throw new IllegalFriendshipException("The profile do not allow this friendship.");
         }
+
+        if (friends.contains(p)) {
+            throw new IllegalFriendshipException(p.getUsername() + " is already a friend of " + this.getUsername());
+        }
+
+        this.friends.add(p);
+        p.friends.add(this);
     }
 
     /**
