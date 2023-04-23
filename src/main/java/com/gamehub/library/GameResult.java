@@ -35,7 +35,7 @@ public class GameResult {
 
     private final Game game;
 
-    public GameResult(Game game, RegisteredPlayer winner, RegisteredPlayer loser) throws GameResultException {
+    public GameResult(Game game, RegisteredPlayer winner, RegisteredPlayer loser) {
         if (game == null || winner == null || loser == null) {
             throw new GameResultException("parameters can't be null");
         }

@@ -92,6 +92,10 @@ public class RegisteredPlayer extends Player {
         g.addPlayer(this);
     }
 
+    public boolean hasGame(Game game) {
+        return games.contains(game);
+    }
+
     /**
      * Offer 
      * @param g game to offer

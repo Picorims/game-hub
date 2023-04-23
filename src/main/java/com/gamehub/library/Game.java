@@ -25,6 +25,7 @@ SOFTWARE.
 package com.gamehub.library;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.bot.Bot;
@@ -43,6 +44,8 @@ public class Game {
     private Bot bot;
     private ArrayList<RegisteredPlayer> players;
     private ArrayList<GameResult> results;
+
+    private static Random random = new Random();
 
     public Game(String name, String genre) {
         this.name = name;
@@ -63,6 +66,10 @@ public class Game {
 
     public void addBot(Bot bot) {
         this.bot = bot;
+    }
+
+    public Bot getBot() {
+        return bot;
     }
 
     public void addPlayer(RegisteredPlayer p) {
@@ -129,6 +136,36 @@ public class Game {
             }
         }
         return supported;
+    }
+
+    /**
+     * Make two players play together
+     * @param p1
+     * @param p2
+     */
+    public void play(RegisteredPlayer p1, RegisteredPlayer p2) {
+        double rand = random.nextDouble();
+        System.out.println(rand);
+        if (rand < 0.5) {
+            new GameResult(this, p1, p2);
+            System.out.println(p1.getUsername() + " won!");
+        } else {
+            new GameResult(this, p2, p1);
+            System.out.println(p2.getUsername() + " won!");
+        }
+    }
+
+    /**
+     * Make a player play against a bot
+     * @param p1
+     */
+    public void play(RegisteredPlayer p1) {
+        boolean botWon = bot.playGameOption(this);
+        if (botWon) {
+            System.out.println(bot.getUsername() + " won!");
+        } else {
+            System.out.println(p1.getUsername() + " won!");
+        }
     }
 
     @Override

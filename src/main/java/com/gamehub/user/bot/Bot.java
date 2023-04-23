@@ -53,9 +53,18 @@ public class Bot extends Player {
             e.printStackTrace();
             System.exit(-1);
         }
+        games = new ArrayList<>();
+        strategies = new ArrayList<>();
+        gameOptions = new HashMap<>();
     }
     
-    public void addGame(Game game) {games.add(game);}
+    public void addGame(Game game) throws Exception {
+        if (game.getBot() != null) {
+            throw new Exception("This game already has a bot.");
+        }
+        games.add(game);
+        game.addBot(this);
+    }
     public void addStrategy(GameAI ai) {strategies.add(ai);}
 
     /**
@@ -81,5 +90,16 @@ public class Bot extends Player {
 
     public ArrayList<GameAI> getGameOptions(Game game) {
         return (ArrayList<GameAI>) gameOptions.get(game).clone();
+    }
+
+    /**
+     * Play against the AI for the given game
+     * @param game
+     * @return
+     */
+    public boolean playGameOption(Game game) {
+        // TODO handle multiple strategies
+        GameAI ai = gameOptions.get(game).get(0);
+        return ai.wins();
     }
 }

@@ -107,7 +107,6 @@ AddPlayer --> LoggedInMenu: back
 
 Play --> ChooseFriend: play with friend
 Play --> Playing: play with bot
-Play: TODO
 
 ChooseFriend --> Playing: play
 ChooseFriend --> Play: back

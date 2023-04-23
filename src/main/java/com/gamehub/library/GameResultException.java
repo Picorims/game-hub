@@ -27,7 +27,7 @@ package com.gamehub.library;
 /**
  * Exception thrown when a game result cannot be created.
  */
-public class GameResultException extends Exception {
+public class GameResultException extends RuntimeException {
     public GameResultException() {
         super();
     }

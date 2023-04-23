@@ -34,7 +34,6 @@ import java.util.Set;
 import com.gamehub.library.Game;
 import com.gamehub.library.GameCollection;
 import com.gamehub.library.GameResult;
-import com.gamehub.library.GameResultException;
 import com.gamehub.library.NullPlatform;
 import com.gamehub.library.Platform;
 import com.gamehub.user.Admin;
@@ -44,7 +43,9 @@ import com.gamehub.user.IllegalFriendshipException;
 import com.gamehub.user.Player;
 import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.TutoringException;
+import com.gamehub.user.bot.BasicGameAI;
 import com.gamehub.user.bot.Bot;
+import com.gamehub.user.bot.GameAI;
 import com.gamehub.user.profile.GoldProfile;
 import com.gamehub.user.profile.IllegalProfileException;
 import com.gamehub.user.profile.KidProfile;
@@ -77,7 +78,8 @@ public class GameHub {
 
     private enum SelectPlayerType {
         ALL,
-        CHILDREN
+        CHILDREN,
+        FRIENDS
     }
 
     /**
@@ -195,6 +197,7 @@ public class GameHub {
         if (!(loggedInUser instanceof Admin)) {
             menuOptions.add(new MenuOption("add a friend", GameHub::addFriend));
             menuOptions.add(new MenuOption("remove a friend", GameHub::removeFriend));
+            menuOptions.add(new MenuOption("play a game", GameHub::playGame));
             menuOptions.add(new MenuOption("delete account", GameHub::deleteAccount));
         }
         
@@ -435,6 +438,59 @@ public class GameHub {
         );
     }
 
+    /**
+     * Play a game with a friend or a bot.
+     */
+    private static void playGame() {
+        Game game = selectGame(loggedInUser.getPlatform());
+        if (game == null) {
+            System.out.println("no game available");
+            showLoggedInMenu();
+        } else if (!loggedInUser.hasGame(game)) {
+            System.out.println("You do not have this game.");
+            showLoggedInMenu();
+        } else {
+            if (game.getBot() != null) {
+                Menu.showMenu(
+                    "play with the bot " + game.getBot().getUsername() + "?",
+                    new ArrayList<>(Arrays.asList(
+                        new MenuOption("yes", () -> {
+                            game.play(loggedInUser);
+                            showLoggedInMenu();
+                        }),
+                        new MenuOption("no", () -> {
+                            chooseFriendToPlay(game);
+                        })
+                    ))
+                );
+            } else {
+                // no bot
+                chooseFriendToPlay(game);
+            }
+        }
+    }
+
+    /**
+     * Choose a player to play with the logged in user. Go back to the logged in menu
+     * in case of an impossibility to play.
+     * @param game
+     */
+    private static void chooseFriendToPlay(Game game) {
+        RegisteredPlayer friend = selectPlayer(SelectPlayerMode.EXCLUDE_SELF, SelectPlayerType.FRIENDS);
+        if (friend == null) {
+            System.out.println("No friend to play with.");
+            showLoggedInMenu();
+        } else {
+            if (!friend.hasGame(game)) {
+                System.out.println(friend.getUsername() + "does not have the game " + game.getName());
+                showLoggedInMenu();
+            } else {
+                game.play(loggedInUser, friend);
+                showLoggedInMenu();
+            }
+        }
+    }
+
 
 
 
@@ -482,6 +538,10 @@ public class GameHub {
                 }
                 if (type == SelectPlayerType.CHILDREN && !(p instanceof Child)) {
                     // children only
+                    continue;
+                }
+                if (type == SelectPlayerType.FRIENDS && !loggedInUser.hasFriend(p)) {
+                    // friends only
                     continue;
                 }
                 menuOptions.add(new MenuOption(p.getUsername()));
@@ -607,7 +667,13 @@ public class GameHub {
 
             p1.addFriend(p2);
 
-        } catch (ParseException | GameAcquiringException | GameResultException | TutoringException | IllegalFriendshipException e) {
+            GameAI ai = new BasicGameAI("ai");
+            Bot b = new Bot("herobrine");
+            b.addGame(minecraft);
+            b.addStrategy(ai);
+            b.addGameOption(minecraft, ai);
+
+        } catch (Exception e) {
             System.out.println("incoherent test data.");
             e.printStackTrace();
             System.exit(-1);

@@ -88,6 +88,10 @@ public abstract class Player {
         }
     }
 
+    public boolean hasFriend(Player p) {
+        return friends.contains(p);
+    }
+
     /**
      * Defines the user profile.
      * @param profile
