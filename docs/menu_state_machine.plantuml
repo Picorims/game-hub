@@ -76,7 +76,6 @@ state LoggedInMenu #113355 {
     ConfirmationScreen: TODO
 
     GetGame --> UserMenu: back
-    GetGame: TODO
 
     AddFriend --> UserMenu: back
     AddFriend: TODO

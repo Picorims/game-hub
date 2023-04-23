@@ -68,6 +68,14 @@ public class GameHub {
     private static HashMap<String, Player> players;
 
     /**
+     * Mode for the `selectPlayer` function.
+     */
+    private enum SelectPlayerMode {
+        INCLUDE_SELF,
+        EXCLUDE_SELF
+    }
+
+    /**
      * Check if a username is available by checking if a player instance
      * (bot or real player) has this username.
      * @param username
@@ -201,24 +209,13 @@ public class GameHub {
     /**
      * Show the menu to choose a player
      */
-    private static void showPlayerInfoMenu() { //TODO make generic
-        ArrayList<MenuOption> menuOptions = new ArrayList<>();
-
-        for (Player p : players.values()) {
-            if (p instanceof RegisteredPlayer) {
-                final RegisteredPlayer player = (RegisteredPlayer) p;
-                menuOptions.add(new MenuOption(p.getUsername(), () -> {
-                    printPlayerInfo(player);
-                }));
-            }
-        }
-
-        if (menuOptions.size() > 0) {
-            Menu.showMenu("Please choose a player", menuOptions);
+    private static void showPlayerInfoMenu() {
+        RegisteredPlayer player = selectPlayer(SelectPlayerMode.INCLUDE_SELF);
+        if (player == null) {
+            System.out.println("No player available.");
+            showLoggedInMenu();
         } else {
-            Menu.showMenu("Please choose a player", new ArrayList<>(Arrays.asList(
-                new MenuOption("none, go back", GameHub::showLoggedInMenu)
-            )));
+            printPlayerInfo(player);
         }
     }
 
@@ -355,6 +352,36 @@ public class GameHub {
             String name = options.get(result).getTitle();
             return collection.getPlatform(name);
         }
+    }
+
+    /**
+     * Show a menu to select a registered player.
+     * @param mode include the logged in user in the list.
+     * @return
+     */
+    private static RegisteredPlayer selectPlayer(SelectPlayerMode mode) {
+        ArrayList<MenuOption> menuOptions = new ArrayList<>();
+
+        for (Player p : players.values()) {
+            if (p instanceof RegisteredPlayer) {
+                if (mode == SelectPlayerMode.EXCLUDE_SELF && loggedInUser.equals(p)) {
+                    continue;
+                }
+                menuOptions.add(new MenuOption(p.getUsername()));
+            }
+        }
+
+        if (menuOptions.size() == 0) {
+            return null;
+        } else {
+            int result = Menu.showMenu("Please choose a player", menuOptions);
+            String name = menuOptions.get(result).getTitle();
+            return (RegisteredPlayer) players.get(name);
+        }
+    }
+
+    private static RegisteredPlayer selectPlayer() {
+        return selectPlayer(SelectPlayerMode.EXCLUDE_SELF);
     }
 
     /**
