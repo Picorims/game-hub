@@ -39,6 +39,8 @@ import java.util.Scanner;
  */
 public class Menu {
     public static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final int PAGE_LENGTH = 25;
+
     // must not be closed or the input stream is closed
     // and unavailable until the program restarts.
     public static final Scanner scanner = new Scanner(System.in);
@@ -123,25 +125,55 @@ public class Menu {
      * Asks the user for one of the options, and execute the associated action.
      * @param title
      * @param options (at least one must be provided)
+     * @param page the page to show
      */
-    public static void showMenu(String title, ArrayList<MenuOption> options) {
+    public static void showMenu(String title, ArrayList<MenuOption> options, int page) {
         if (options == null || options.isEmpty()) {
             throw new MenuException("At least one option must be provided");
         }
 
-        // display
-        System.out.println("================ [" + title + "] ================");
+        int min = page * PAGE_LENGTH;
+        int max = Math.min(min + PAGE_LENGTH, options.size());
 
-        for (int i = 0; i < options.size(); i++) {
+        // display
+        System.out.println("================ ["+title+" | page "+page+"] ================");
+
+        for (int i = min; i < max; i++) {
             System.out.println(i + " - " + options.get(i).getTitle());
         }
 
+        int minInput = 0;
+        int respPrevious = Integer.MIN_VALUE;
+        int respNext = Integer.MIN_VALUE;
+        if (min > 0) {
+            minInput--;
+            respPrevious = minInput;
+            System.out.println(minInput + " - PREVIOUS");
+        }
+        if (min + PAGE_LENGTH <= options.size()) {
+            minInput--;
+            respNext = minInput;
+            System.out.println(minInput + " - NEXT");
+        }
+
         // input
-        int response = getInputInt("-> action", 0, options.size()-1);
+        int response = getInputInt("-> action", minInput, options.size()-1);
 
         // action
-        System.out.println("================ [ => " + options.get(response).getTitle() + "] ================");
-        options.get(response).call();
+        if (response == respPrevious) {
+            showMenu(title, options, page - 1);
+
+        } else if (response == respNext) {
+            showMenu(title, options, page + 1);
+        
+        } else {
+            System.out.println("================ [ => " + options.get(response).getTitle() + "] ================");
+            options.get(response).call();    
+        }
+    }
+
+    public static void showMenu(String title, ArrayList<MenuOption> options) {
+        showMenu(title, options, 0);
     }
 
     /**
@@ -191,18 +223,23 @@ public class Menu {
             showMenu(null, null);
         } catch (Exception e) {
             // it should throw if no option is given (not for a null title)
-            try {
-                showMenu("yes or no ?", new ArrayList<>(Arrays.asList(
-                    new MenuOption("yes", () -> {
-                        System.out.println("it's a yes.");
-                    }),
-                    new MenuOption("no", () -> {
-                        System.out.println("it's a no.");
-                    })
-                )));
-            } catch (Exception e2) {
-                e2.printStackTrace();
+            showMenu("yes or no ?", new ArrayList<>(Arrays.asList(
+                new MenuOption("yes", () -> {
+                    System.out.println("it's a yes.");
+                }),
+                new MenuOption("no", () -> {
+                    System.out.println("it's a no.");
+                })
+            )));
+
+            ArrayList<MenuOption> options = new ArrayList<>();
+            for (int i = 0; i < 70; i++) {
+                final int index = i;
+                options.add(new MenuOption("do " + i, () -> {
+                    System.out.println("it is " + index);
+                }));
             }
+            showMenu("a lot of stuff", options);
         }
     }
 }

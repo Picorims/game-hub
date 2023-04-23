@@ -69,6 +69,7 @@ package gamehub {
 
         class Menu {
             + {static} DATE_FORMAT: String = "dd/MM/yyyy"
+            - {static} PAGE_LENGTH = 25
             - scanner: Scanner
             --
             + {static} showMenu(title: String, options: ArrayList<MenuOption>)
@@ -251,8 +252,9 @@ package gamehub {
 
 
         class GameCollection {
+            - gameNames: Set<String>
             --
-            + {static} GameCollection(dataPath: String)
+            + GameCollection(dataPath: String)
         }
         GameCollection "1..1 collection (5)" ----- "0..n games (5)" Game: (5)
         GameCollection "1..1 collection (10)" ----- "0..n platforms (10)" Platform: (10)

@@ -27,8 +27,8 @@ package com.gamehub;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import com.gamehub.library.GameCollection;
 import com.gamehub.user.Admin;
@@ -36,7 +36,6 @@ import com.gamehub.user.Player;
 import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.bot.Bot;
 import com.gamehub.utils.Menu;
-import com.gamehub.utils.MenuException;
 import com.gamehub.utils.MenuOption;
 
 /**
@@ -147,6 +146,19 @@ public class GameHub {
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
+    }
+
+    private static void showGameInfo(int page) {
+        // TODO wip
+        ArrayList<MenuOption> menuOptions = new ArrayList<>();
+
+        List<String> games = collection.getGameNames();
+
+        for (int i = 0; i < games.size(); i++) {
+            menuOptions.add(new MenuOption(games.get(i), () -> {}));
+        }
+
+        Menu.showMenu("Please choose a game", menuOptions);
     }
 
     /**
