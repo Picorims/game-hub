@@ -27,8 +27,6 @@ package com.gamehub.library;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -59,8 +57,6 @@ public class GameCollection {
     }
 
     private HashMap<String, Game> games;
-    /** iterable and immutable cache of game names */
-    private List<String> gameNames;
     private HashMap<String, Platform> platforms;
     
     /**
@@ -124,11 +120,6 @@ public class GameCollection {
             System.exit(-1);
         }
 
-        // cache game names as an iterable
-        List<String> gamesIterator = new ArrayList<>();
-        gamesIterator.addAll(games.keySet());
-        gameNames = Collections.unmodifiableList(gamesIterator);
-
         System.out.println("Loaded " + games.size() + " games and " + platforms.size() + " platforms.");
     }
 
@@ -136,8 +127,20 @@ public class GameCollection {
         return games.size();
     }
 
-    public List<String> getGameNames() {
-        return gameNames;
+    /**
+     * Only return games for the specified platform
+     * @param platform
+     * @return
+     */
+    public List<String> getGameNames(Platform platform) {
+        return games.values().stream()
+                .filter(game -> game.supportsPlatform(platform))
+                .map(game -> game.getName())
+                .toList();
+    }
+
+    public Set<String> getGameNames() {
+        return games.keySet();
     }
 
     public Game getGame(String name) {

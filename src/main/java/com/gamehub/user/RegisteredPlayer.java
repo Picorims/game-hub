@@ -65,6 +65,10 @@ public class RegisteredPlayer extends Player {
         }
     }
 
+    public Platform getPlatform() {
+        return platform;
+    }
+
     /**
      * Add a game to the player, let it be for itself or through a gift.
      * @param g game to obtain

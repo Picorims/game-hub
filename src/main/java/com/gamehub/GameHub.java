@@ -167,7 +167,7 @@ public class GameHub {
         if (!(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("create a player", GameHub::createPlayer));
         }
-        if (loggedInUser instanceof RegisteredPlayer && !(loggedInUser instanceof Child)) {
+        if (!(loggedInUser instanceof Admin) && !(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("obtain a game", GameHub::getGame));
         }
         menuOptions.add(new MenuOption("logout", GameHub::logout));
@@ -319,7 +319,21 @@ public class GameHub {
             throw new IllegalStateException("only adult players can obtain games.");
         }
 
-
+        Game game = selectGame(loggedInUser.getPlatform());
+        if (game == null) {
+            System.out.println("No game available for your platform.");
+            showLoggedInMenu();
+        } else {
+            try {
+                loggedInUser.obtainGame(game);
+                System.out.println("game obtained!");
+                showLoggedInMenu();
+            } catch (GameAcquiringException e) {
+                System.out.println("Could not obtain the game:");
+                System.out.println(e.getMessage());
+                showLoggedInMenu();
+            }
+        }
     }
 
     /**
@@ -345,23 +359,34 @@ public class GameHub {
 
     /**
      * Show a menu to select a game, and return the name of the game selected.
+     * @param requiredPlatform only show games for a given platform.
      * @return
      */
-    private static Game selectGame() {
+    private static Game selectGame(Platform requiredPlatftorm) {
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 
-        List<String> gameNames = collection.getGameNames();
+        Iterable<String> gameNames;
+        if (requiredPlatftorm instanceof NullPlatform) {
+            gameNames = collection.getGameNames();
+        } else {
+            gameNames = collection.getGameNames(requiredPlatftorm);
+        }
 
-        for (int i = 0; i < gameNames.size(); i++) {
-            menuOptions.add(new MenuOption(gameNames.get(i)));
+        for (String name : gameNames) {
+            menuOptions.add(new MenuOption(name));
         }
 
         if (menuOptions.size() == 0) {
             return null;
         } else {
             int result = Menu.showMenu("Please choose a game", menuOptions);
-            return collection.getGame(gameNames.get(result));
+            String name = menuOptions.get(result).getTitle();
+            return collection.getGame(name);
         }
+    }
+
+    private static Game selectGame() {
+        return selectGame(new NullPlatform());
     }
 
     /**

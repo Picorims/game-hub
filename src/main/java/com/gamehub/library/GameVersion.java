@@ -42,6 +42,10 @@ public class GameVersion {
         this.globalSales = globalSales;
     }
 
+    public Platform getPlatform() {
+        return platform;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

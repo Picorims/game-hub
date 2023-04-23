@@ -114,6 +114,23 @@ public class Game {
         return (games == 0)? 0 : (double) wins / (double) games;
     }
 
+    /**
+     * Returns if the game has a version supporting the given platform.
+     * @param p the platform to test
+     * @return
+     */
+    public boolean supportsPlatform(Platform p) {
+        if (p instanceof NullPlatform) return false;
+        boolean supported = false;
+        for (GameVersion gv: versions) {
+            if (gv.getPlatform().equals(p)) {
+                supported = true;
+                break;
+            }
+        }
+        return supported;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
