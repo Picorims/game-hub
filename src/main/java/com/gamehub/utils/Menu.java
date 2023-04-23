@@ -122,10 +122,9 @@ public class Menu {
      * Shows a menu of options, with an index associated for each option.
      * Asks the user for one of the options, and execute the associated action.
      * @param title
-     * @param options
-     * @throws MenuException
+     * @param options (at least one must be provided)
      */
-    public static void showMenu(String title, ArrayList<MenuOption> options) throws MenuException {
+    public static void showMenu(String title, ArrayList<MenuOption> options) {
         if (options == null || options.isEmpty()) {
             throw new MenuException("At least one option must be provided");
         }
@@ -175,7 +174,7 @@ public class Menu {
 
         try {
             showMenu(null, null);
-        } catch (MenuException e) {
+        } catch (Exception e) {
             // it should throw if no option is given (not for a null title)
             try {
                 showMenu("yes or no ?", new ArrayList<>(Arrays.asList(
@@ -186,7 +185,7 @@ public class Menu {
                         System.out.println("it's a no.");
                     })
                 )));
-            } catch (MenuException e2) {
+            } catch (Exception e2) {
                 e2.printStackTrace();
             }
         }

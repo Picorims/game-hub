@@ -77,15 +77,10 @@ public class GameHub {
      * Menu displayed at start up
      */
     private static void showMainMenu() {
-        try {
-            Menu.showMenu("What do you want to do?", new ArrayList<>(Arrays.asList(
-                new MenuOption("login", GameHub::login),
-                new MenuOption("quit", GameHub::quit)
-            )));
-        } catch (MenuException e) {
-            System.err.println("Could not handle the menu prompt correctly: ");
-            e.printStackTrace();
-        }
+        Menu.showMenu("What do you want to do?", new ArrayList<>(Arrays.asList(
+            new MenuOption("login", GameHub::login),
+            new MenuOption("quit", GameHub::quit)
+        )));
     }
 
     /**
@@ -120,6 +115,10 @@ public class GameHub {
                 System.out.println("OK");
             }
         }
+    }
+
+    private static void showLoggedInMenu() {
+
     }
 
     /**

@@ -41,10 +41,11 @@ package gamehub {
         ..
         - {static} showMainMenu()
         - {static} login()
-        - {static} createPlayer()
-        - {static} showPlayerInfo(p: Player)
-        - {static} showGameInfo(g: Game)
-        - {static} createBot()
+        - {static} showLoggedInMenu()
+        - {static} createPlayer() TODO
+        - {static} showPlayerInfo(p: Player) TODO
+        - {static} showGameInfo(g: Game) TODO
+        - {static} createBot() TODO
         - {static} quit()
     }
 
