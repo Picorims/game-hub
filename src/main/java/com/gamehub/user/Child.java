@@ -29,6 +29,8 @@ import java.util.Date;
 
 import com.gamehub.GameHub;
 import com.gamehub.library.Platform;
+import com.gamehub.user.profile.IllegalProfileException;
+import com.gamehub.user.profile.KidProfile;
 
 /**
  * A Child is a RegisteredPlayer with more restricted actions.
@@ -42,6 +44,13 @@ public class Child extends RegisteredPlayer {
 
         tutors = new ArrayList<>();
         addTutor(tutor);
+
+        try {
+            this.setMemberProfile(new KidProfile());
+        } catch (IllegalProfileException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     /**

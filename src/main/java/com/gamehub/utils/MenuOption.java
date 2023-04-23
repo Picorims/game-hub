@@ -42,6 +42,10 @@ public class MenuOption {
         this.action = action;
     }
 
+    public MenuOption(String title) {
+        this(title, null);
+    }
+
     /**
      * Display text for the option
      * @return
@@ -54,6 +58,6 @@ public class MenuOption {
      * Triggers the option's action
      */
     public void call() {
-        action.action();
+        if (action != null) action.action();
     }
 }

@@ -61,6 +61,7 @@ public class RegisteredPlayer extends Player {
             setMemberProfile(new StandardProfile());
         } catch (IllegalProfileException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 

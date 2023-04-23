@@ -51,6 +51,7 @@ public class Bot extends Player {
             setMemberProfile(new BotProfile());
         } catch (IllegalProfileException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
     

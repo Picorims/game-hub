@@ -27,8 +27,10 @@ package com.gamehub;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.gamehub.library.Game;
 import com.gamehub.library.GameCollection;
@@ -41,6 +43,11 @@ import com.gamehub.user.Player;
 import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.TutoringException;
 import com.gamehub.user.bot.Bot;
+import com.gamehub.user.profile.GoldProfile;
+import com.gamehub.user.profile.IllegalProfileException;
+import com.gamehub.user.profile.KidProfile;
+import com.gamehub.user.profile.MemberProfile;
+import com.gamehub.user.profile.StandardProfile;
 import com.gamehub.utils.Menu;
 import com.gamehub.utils.MenuOption;
 
@@ -155,6 +162,9 @@ public class GameHub {
         // shared options
         menuOptions.add(new MenuOption("show game information", GameHub::showGameInfoMenu));
         menuOptions.add(new MenuOption("show player information", GameHub::showPlayerInfoMenu));
+        if (!(loggedInUser instanceof Child)) {
+            menuOptions.add(new MenuOption("create a player", GameHub::createPlayer));
+        }
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
@@ -228,6 +238,100 @@ public class GameHub {
         showLoggedInMenu();
     }
 
+    /**
+     * Add a new player to the database.
+     * An admin creates an adult player, while an adult user
+     * creates a child user. 
+     */
+    private static void createPlayer() {
+        if (loggedInUser instanceof Child) throw new IllegalStateException("Children can't create players");
+        
+        boolean creatingChild = false;
+        if (loggedInUser instanceof Admin) {
+            System.out.println("You are creating an adult player.");
+        } else {
+            creatingChild = true;
+            System.out.println("You are creating a child player.");
+        }
+
+        String username = Menu.getInputString(
+            "username (unique)",
+            ((name) -> players.get(name) == null)
+        );
+
+        MemberProfile profile;
+        if (creatingChild) profile = new KidProfile();
+        else {
+            int profileResp = Menu.showMenu("profile", new ArrayList<>(Arrays.asList(
+                new MenuOption("standard"),
+                new MenuOption("gold")
+            )));
+            if (profileResp == 0) {
+                profile = new StandardProfile();
+            } else {
+                profile = new GoldProfile();
+            }
+        }
+
+        String email = Menu.getInputString("email", ((name) -> name.contains("@")));
+        String birthDate = Menu.getInputString("birth date (dd/mm/yyyy)", (date) -> {
+            try {
+                Menu.parseDate(date);
+                return true;
+            } catch (ParseException e) {
+                return false;
+            }
+            // do not test if it is greater than today, nor if it is valid for a child (< 18 years old)
+        });
+        String platform = selectPlatform();
+
+        Date date;
+        try {
+            date = Menu.parseDate(birthDate);
+
+            if (creatingChild) {
+                new Child(username, email, date, collection.getPlatform(platform), loggedInUser);
+                
+            } else {
+                RegisteredPlayer p = new RegisteredPlayer(username, email, date, collection.getPlatform(platform));
+                p.setMemberProfile(profile);
+            }
+    
+        } catch (ParseException e) {
+            System.err.println("date parsing error.");
+            e.printStackTrace();
+            System.exit(-1);
+
+        } catch (TutoringException e) {
+            System.out.println("Cannot create the child player.");
+            System.out.println(e.getMessage());
+            showLoggedInMenu();
+
+        } catch (IllegalProfileException e) {
+            System.err.println("profile assignation error.");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        System.out.println(username + " created.");
+        showLoggedInMenu();
+    }
+
+    /**
+     * Select a platform from the list of available platforms through a menu.
+     * @return
+     */
+    private static String selectPlatform() {
+        ArrayList<MenuOption> options = new ArrayList<>();
+        Set<String> platforms = collection.getPlatforms();
+
+        for (String platform : platforms) {
+            options.add(new MenuOption(platform));
+        }
+
+        int result = Menu.showMenu("Select a platform", options);
+        return options.get(result).getTitle();
+    }
 
     /**
      * Terminate the application
@@ -271,16 +375,16 @@ public class GameHub {
         try {
             Game minecraft = collection.getGame("Minecraft");
             
-            RegisteredPlayer p1 = new RegisteredPlayer("john", "john@example.com", Menu.parseDate("01/02/1993"), collection.gePlatform("X360"));
+            RegisteredPlayer p1 = new RegisteredPlayer("john", "john@example.com", Menu.parseDate("01/02/1993"), collection.getPlatform("X360"));
             p1.obtainGame(minecraft); // 240
             
-            RegisteredPlayer p2 = new RegisteredPlayer("dan", "dan@example.com", Menu.parseDate("08/04/1997"), collection.gePlatform("PS3"));
+            RegisteredPlayer p2 = new RegisteredPlayer("dan", "dan@example.com", Menu.parseDate("08/04/1997"), collection.getPlatform("PS3"));
             p2.obtainGame(minecraft); // 240
             
-            RegisteredPlayer p3 = new RegisteredPlayer("jeff", "jeff@example.com", Menu.parseDate("08/11/1994"), collection.gePlatform("PS4"));
+            RegisteredPlayer p3 = new RegisteredPlayer("jeff", "jeff@example.com", Menu.parseDate("08/11/1994"), collection.getPlatform("PS4"));
             p3.obtainGame(minecraft); // 240
 
-            RegisteredPlayer p4 = new Child("jessica", "jessica@example.com", Menu.parseDate("08/11/2007"), collection.gePlatform("PS4"), p1);
+            RegisteredPlayer p4 = new Child("jessica", "jessica@example.com", Menu.parseDate("08/11/2007"), collection.getPlatform("PS4"), p1);
             p3.obtainGame(minecraft); // 240
 
             new GameResult(minecraft, p1, p3);

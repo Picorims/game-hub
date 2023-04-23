@@ -44,7 +44,7 @@ package gamehub {
         - {static} logout()
         - {static} showLoggedInMenu()
 
-        - {static} createPlayer() TODO
+        - {static} createPlayer()
         
         - {static} showGameInfoMenu()
         - {static} printGameInfo(g: Game)
@@ -53,6 +53,8 @@ package gamehub {
         - {static} showPlayerInfo(p: Player)
         
         - {static} createBot() TODO
+
+        - {static} selectPlatform(): String
         
         - {static} quit()
     }
@@ -69,7 +71,7 @@ package gamehub {
         class MenuOption {
             - title: String
             --
-            + MenuOption(title: String, action: Action)
+            + MenuOption(title: String, action: Action = null)
             + call()
         }
         MenuOption "1..1 option" x---> "1..1 action" Action
@@ -81,7 +83,7 @@ package gamehub {
             --
             + {static} showMenu(title: String, options: ArrayList<MenuOption>, page: int = 0)
             + {static} getInputInt(promptMsg: String, min: int = 0, max: int = 1): int
-            + {static} getInputString(promptMsg: String): String
+            + {static} getInputString(promptMsg: String, Function<String, Boolean> validityFunction = ((str) -> true)): String
             + {static} parseDate(date: String): Date
             + {static} pressEnterToConfirm(promptMsg: String = ""): void
         }

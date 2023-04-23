@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Menu",
+            "request": "launch",
+            "mainClass": "com.gamehub.utils.Menu",
+            "projectName": "app3_java_projet_CharlySchmidt"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
@@ -18,13 +25,6 @@
             "mainClass": "com.gamehub.GameHub",
             "projectName": "app3_java_projet_CharlySchmidt",
             "args": "${command:SpecifyProgramArgs}"
-        },
-        // {
-        //     "type": "java",
-        //     "name": "Menu",
-        //     "request": "launch",
-        //     "mainClass": "com.gamehub.utils.Menu",
-        //     "projectName": "app3_java_projet_CharlySchmidt"
-        // }
+        }
     ]
 }

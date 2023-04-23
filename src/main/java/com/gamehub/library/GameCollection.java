@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -143,7 +144,11 @@ public class GameCollection {
         return games.get(name);
     }
 
-    public Platform gePlatform(String name) {
+    public Platform getPlatform(String name) {
         return platforms.get(name);
+    }
+
+    public Set<String> getPlatforms() {
+        return platforms.keySet();
     }
 }

@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.function.Function;
 
 /**
  * Utility for displaying interactive menu
@@ -93,9 +94,10 @@ public class Menu {
      * Ask the user for a string while the input is invalid
      * and return the result
      * @param promptMsg
+     * @param validityFunction function that returns if a string is a valid input
      * @return
      */
-    public static String getInputString(String promptMsg) {
+    public static String getInputString(String promptMsg, Function<String, Boolean> validityFunction) {
         String response = null;
 
         boolean invalid = true;
@@ -106,7 +108,7 @@ public class Menu {
             
             try {
                 response = scanner.nextLine();
-                invalid = false;
+                invalid = !validityFunction.apply(response);
             } catch (InputMismatchException e) {
                 invalid = true;
                 // empty the queue to not cause an infinite loop
@@ -120,14 +122,21 @@ public class Menu {
         return response;
     }
 
+    public static String getInputString(String promptMsg) {
+        return getInputString(promptMsg, (str) -> {return true;});
+    }
+
+
+
     /**
      * Shows a menu of options, with an index associated for each option.
      * Asks the user for one of the options, and execute the associated action.
      * @param title
      * @param options (at least one must be provided)
      * @param page the page to show
+     * @return the selected value
      */
-    public static void showMenu(String title, ArrayList<MenuOption> options, int page) {
+    public static int showMenu(String title, ArrayList<MenuOption> options, int page) {
         if (options == null || options.isEmpty()) {
             throw new MenuException("At least one option must be provided");
         }
@@ -170,12 +179,14 @@ public class Menu {
         
         } else {
             System.out.println("================ [ => " + options.get(response).getTitle() + "] ================");
-            options.get(response).call();    
+            options.get(response).call();
         }
+
+        return response;
     }
 
-    public static void showMenu(String title, ArrayList<MenuOption> options) {
-        showMenu(title, options, 0);
+    public static int showMenu(String title, ArrayList<MenuOption> options) {
+        return showMenu(title, options, 0);
     }
 
     /**
@@ -186,6 +197,7 @@ public class Menu {
      */
     public static Date parseDate(String date) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setLenient(false); // do not allow impossible dates
         Date dateObj = dateFormat.parse(date);
         return dateObj;
     }
@@ -219,13 +231,16 @@ public class Menu {
         String s = getInputString("test str");
         System.out.println("=> " + s);
 
+        String s2 = getInputString("test str length of 3", (str) -> {return str.length() >= 3;});
+        System.out.println("=> " + s2);
+
         pressEnterToConfirm("back");
 
         try {
             showMenu(null, null);
         } catch (Exception e) {
             // it should throw if no option is given (not for a null title)
-            showMenu("yes or no ?", new ArrayList<>(Arrays.asList(
+            int result = showMenu("yes or no ?", new ArrayList<>(Arrays.asList(
                 new MenuOption("yes", () -> {
                     System.out.println("it's a yes.");
                 }),
@@ -233,6 +248,7 @@ public class Menu {
                     System.out.println("it's a no.");
                 })
             )));
+            System.out.println("it was " + result);
 
             ArrayList<MenuOption> options = new ArrayList<>();
             for (int i = 0; i < 70; i++) {
