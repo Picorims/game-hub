@@ -75,6 +75,11 @@ public class GameHub {
         EXCLUDE_SELF
     }
 
+    private enum SelectPlayerType {
+        ALL,
+        CHILDREN
+    }
+
     /**
      * Check if a username is available by checking if a player instance
      * (bot or real player) has this username.
@@ -184,6 +189,7 @@ public class GameHub {
         
         if (!(loggedInUser instanceof Admin) && !(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("obtain a game", GameHub::getGame));
+            menuOptions.add(new MenuOption("add a tutor to a child", GameHub::addTutor));
         }
 
         if (!(loggedInUser instanceof Admin)) {
@@ -389,6 +395,29 @@ public class GameHub {
         }
     }
 
+    private static void addTutor() {
+        if (loggedInUser instanceof Admin || loggedInUser instanceof Child) {
+            throw new IllegalStateException("only adults can add a tutor to a child");
+        }
+
+        Child child = (Child) selectPlayer(SelectPlayerMode.EXCLUDE_SELF, SelectPlayerType.CHILDREN);
+
+        if (child == null) {
+            System.out.println("no child available");
+            showLoggedInMenu();
+        } else {
+            try {
+                child.addTutor(loggedInUser);
+                System.out.println("added " + loggedInUser.getUsername() + " as a tutor of " + child.getUsername());
+            } catch (TutoringException e) {
+                System.out.println("Could not add yourself as a tutor:");
+                System.out.println(e.getMessage());
+            } finally {
+                showLoggedInMenu();
+            }
+        }
+    }
+
     /**
      * Remove the logged in user from the database
      */
@@ -438,15 +467,21 @@ public class GameHub {
 
     /**
      * Show a menu to select a registered player.
-     * @param mode include the logged in user in the list.
+     * @param mode include the logged in user in the list. (exclude self by default)
+     * @param type type of players to select. (all by default)
      * @return
      */
-    private static RegisteredPlayer selectPlayer(SelectPlayerMode mode) {
+    private static RegisteredPlayer selectPlayer(SelectPlayerMode mode, SelectPlayerType type) {
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 
         for (Player p : players.values()) {
             if (p instanceof RegisteredPlayer) {
                 if (mode == SelectPlayerMode.EXCLUDE_SELF && loggedInUser.equals(p)) {
+                    // remove the logged in user
+                    continue;
+                }
+                if (type == SelectPlayerType.CHILDREN && !(p instanceof Child)) {
+                    // children only
                     continue;
                 }
                 menuOptions.add(new MenuOption(p.getUsername()));
@@ -462,8 +497,12 @@ public class GameHub {
         }
     }
 
+    private static RegisteredPlayer selectPlayer(SelectPlayerMode mode) {
+        return selectPlayer(mode, SelectPlayerType.ALL);
+    }
+
     private static RegisteredPlayer selectPlayer() {
-        return selectPlayer(SelectPlayerMode.EXCLUDE_SELF);
+        return selectPlayer(SelectPlayerMode.EXCLUDE_SELF, SelectPlayerType.ALL);
     }
 
     /**

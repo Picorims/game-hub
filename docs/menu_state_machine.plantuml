@@ -63,11 +63,11 @@ state LoggedInMenu #113355 {
         AdultMenu --> AddTutor: add tutor
 
         AddTutor --> AdultMenu: back
-        AddTutor: TODO
     }
     UserMenu --> AddFriend: invite
     UserMenu --> RemoveFriend: invite
     UserMenu -up-> GetGame: get game
+    UserMenu -up-> OfferGame: offer game
     UserMenu --> logout: logout
     UserMenu --> ConfirmationScreen: delete account
     UserMenu --> [*]
@@ -75,6 +75,9 @@ state LoggedInMenu #113355 {
     ConfirmationScreen --> logout: confirm
 
     GetGame --> UserMenu: back
+    
+    OfferGame --> UserMenu: back
+    OfferGame: TODO
 
     AddFriend --> UserMenu: back
 

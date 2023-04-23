@@ -63,8 +63,8 @@ public class Child extends RegisteredPlayer {
         if (tutor instanceof Child) throw new TutoringException("Tutors must be adults");
         if (tutors.size() == 2) throw new TutoringException("Maximum of tutors reached.");
 
+        tutor.addChild(this); // must be called first to ensure a child is not added twice
         tutors.add(tutor);
-        tutor.addChild(this);
 
     }
 

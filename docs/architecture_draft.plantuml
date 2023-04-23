@@ -57,6 +57,8 @@ package gamehub {
         - {static} addFriend()
         - {static} removeFriend()
 
+        - {static} addTutor()
+
         - {static} selectGame(requiredPlatform: Platform): Game
         - {static} selectPlatform(): Platform
         - {static} selectPlayer(includeSelf: Boolean = false): RegisteredPlayer
