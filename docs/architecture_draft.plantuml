@@ -41,6 +41,7 @@ package gamehub {
         ..
         - {static} showMainMenu()
         - {static} login()
+        - {static} logout()
         - {static} showLoggedInMenu()
         - {static} createPlayer() TODO
         - {static} showPlayerInfo(p: Player) TODO

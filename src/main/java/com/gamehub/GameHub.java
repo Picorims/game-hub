@@ -92,8 +92,7 @@ public class GameHub {
         if (username.equals("admin")) {
             // admin
             loggedInUser = (Admin) players.get("admin");
-            // TODO admin menu
-            System.out.println("OK");
+            showLoggedInMenu();
 
         } else if (username.equals("/b")) {
             // back
@@ -111,14 +110,29 @@ public class GameHub {
             } else {
                 // valid
                 loggedInUser = (RegisteredPlayer) potentialPlayer;
-                // TODO user menu
-                System.out.println("OK");
+                showLoggedInMenu();
             }
         }
     }
 
-    private static void showLoggedInMenu() {
+    /**
+     * log out and go back to the main menu
+     */
+    private static void logout() {
+        loggedInUser = null;
+        showMainMenu();
+    }
 
+    /**
+     * Menu when a user is logged in (admin, adult or child).
+     * The menu adapts itself to the logged in user.
+     */
+    private static void showLoggedInMenu() {
+        ArrayList<MenuOption> menuOptions = new ArrayList<>();
+
+        menuOptions.add(new MenuOption("logout", GameHub::logout));
+
+        Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
     }
 
     /**
