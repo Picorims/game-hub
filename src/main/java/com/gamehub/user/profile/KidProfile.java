@@ -28,7 +28,11 @@ import com.gamehub.user.Child;
 import com.gamehub.user.Player;
 
 public class KidProfile implements MemberProfile {
-
+    @Override
+    public String getName() {
+        return "Kid profile";
+    }
+    
     @Override
     public int maxGames() {
         return 30;

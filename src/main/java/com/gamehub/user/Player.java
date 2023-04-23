@@ -100,4 +100,24 @@ public abstract class Player {
 
         this.memberProfile = profile;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("username: " + username + "\n");
+        sb.append("profile: " + memberProfile.getName() + "\n");
+        sb.append("friends count: " + friends.size() + "\n");
+
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object arg0) {
+        if (this == arg0) return true;
+        if (arg0 == null) return false;
+        if (!(arg0 instanceof Player)) return false;
+        Player p2 = (Player) arg0;
+        return this.username == p2.username;
+    }
 }

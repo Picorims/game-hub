@@ -53,6 +53,10 @@ public class Game {
         results = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void addGameVersion(GameVersion version) {
         versions.add(version);
     }
@@ -86,13 +90,37 @@ public class Game {
         results.add(g);
     }
 
+
+    /**
+     * Returns a number between 0 and 1 representing
+     * the percentage of wins for the game.
+     * @param p Player for which the ratio is computed.
+     * @return
+     */
+    public double getWinRatio(RegisteredPlayer p) {
+        int wins = 0;
+        int games = 0;
+
+        for (GameResult result : results) {
+            if (result.getWinner().equals(p)) {
+                wins++;
+                games++;
+            }
+            if (result.getLoser().equals(p)) {
+                games++;
+            }
+        }
+
+        return (games == 0)? 0 : (double) wins / (double) games;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("name: " + this.name + "\n");
         sb.append("genre: " + this.genre + "\n");
-        sb.append("versions: ");
+        sb.append("versions:\n");
         for (GameVersion gv : versions) {
             sb.append("---\n");
             sb.append(gv);

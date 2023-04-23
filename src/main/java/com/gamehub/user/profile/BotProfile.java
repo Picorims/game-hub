@@ -27,7 +27,11 @@ package com.gamehub.user.profile;
 import com.gamehub.user.Player;
 
 public class BotProfile implements MemberProfile {
-
+    @Override
+    public String getName() {
+        return "Bot profile";
+    }
+    
     @Override
     public int maxGames() {
         return Integer.MAX_VALUE;

@@ -25,7 +25,11 @@ SOFTWARE.
 package com.gamehub.user.profile;
 
 public class GoldProfile extends StandardProfile {
-
+    @Override
+    public String getName() {
+        return "Gold profile";
+    }
+    
     @Override
     public int maxGames() {
         return Integer.MAX_VALUE;

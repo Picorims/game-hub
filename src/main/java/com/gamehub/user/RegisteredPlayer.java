@@ -121,4 +121,21 @@ public class RegisteredPlayer extends Player {
     public boolean hasChild(Child c) {
         return this.children.contains(c);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(super.toString());
+        sb.append("birth date: " + birthDate + "\n");
+        sb.append("email: " + email + "\n");
+        sb.append("platform: " + platform.getName() + "\n");
+        sb.append("games:\n");
+        for (Game g : games) {
+            double ratio = g.getWinRatio(this);
+            sb.append("- " + g.getName() + " (win ratio = " + (ratio*100) + "%)\n");
+        }
+
+        return sb.toString();
+    }
 }

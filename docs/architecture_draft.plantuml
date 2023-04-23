@@ -38,16 +38,22 @@ package gamehub {
         - {static} loggedInPlayer: RegisteredPlayer
         --
         + {static} usernameAvailable(username: String): boolean
-        ..
+        ..ui logic..
         - {static} showMainMenu()
         - {static} login()
         - {static} logout()
         - {static} showLoggedInMenu()
+
         - {static} createPlayer() TODO
-        - {static} showPlayerInfo(p: Player) TODO
+        
         - {static} showGameInfoMenu()
         - {static} printGameInfo(g: Game)
+        
+        - {static} showPlayerInfoMenu()
+        - {static} showPlayerInfo(p: Player)
+        
         - {static} createBot() TODO
+        
         - {static} quit()
     }
 
@@ -89,6 +95,7 @@ package gamehub {
 
         package profile {
             interface MemberProfile {
+                + {abstract} getName(): String
                 + {abstract} maxGames(): int
                 + {abstract} canOwnGames(): boolean
                 + {abstract} maxFriends(): int
@@ -211,8 +218,9 @@ package gamehub {
             - name: String
             - genre: String
             --
-            + play(p1: Player, p2: Player): boolean
-            + play(p1: Player): boolean
+            + play(p1: RegisteredPlayer, p2: RegisteredPlayer): boolean TODO
+            + play(p1: RegisteredPlayer): boolean TODO
+            + getWinRatio(p: RegisteredPlayer): double
         }
         note top of Game
             When playing, a single player provided means

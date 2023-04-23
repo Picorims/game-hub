@@ -35,6 +35,7 @@ import com.gamehub.user.Player;
  * to access them.
  */
 public interface MemberProfile {
+    public String getName();
     public int maxGames();
     public boolean canOwnGames();
     public int maxFriends();

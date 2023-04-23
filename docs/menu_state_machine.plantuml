@@ -24,7 +24,7 @@
 !theme cyborg-outline
 skinparam BackgroundColor #222222
 
-state ShowUserInfo
+state ShowUserInfoMenu
 state ShowGameInfoMenu
 state AddPlayer
 
@@ -79,7 +79,7 @@ state LoggedInMenu #113355 {
     RemoveFriend --> UserMenu: back
 }
 logout --> MainMenu: logout
-LoggedInMenu --> ShowUserInfo: show user info
+LoggedInMenu --> ShowUserInfoMenu: show user info
 LoggedInMenu --> ShowGameInfoMenu: show game info
 LoggedInMenu --> AddPlayer: add player [not a child]
 LoggedInMenu --> Play: play
@@ -87,6 +87,8 @@ LoggedInMenu --> Play: play
 note right of LoggedInMenu
     An exit point <b>MUST</b> be taken to leave this state.
 end note
+
+ShowUserInfoMenu --> ShowUserInfo: choose
 
 ShowUserInfo: <b>Entry</b> [user type = admin or adult] / show all
 ShowUserInfo: <b>Entry</b> [user type = child] / show restricted

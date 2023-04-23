@@ -30,10 +30,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.gamehub.library.Game;
 import com.gamehub.library.GameCollection;
+import com.gamehub.library.GameResult;
+import com.gamehub.library.GameResultException;
 import com.gamehub.user.Admin;
+import com.gamehub.user.Child;
+import com.gamehub.user.GameAcquiringException;
 import com.gamehub.user.Player;
 import com.gamehub.user.RegisteredPlayer;
+import com.gamehub.user.TutoringException;
 import com.gamehub.user.bot.Bot;
 import com.gamehub.utils.Menu;
 import com.gamehub.utils.MenuOption;
@@ -46,6 +52,7 @@ public class GameHub {
 
     private static GameCollection collection;
     private static RegisteredPlayer loggedInUser;
+
     /**
      * Store players based on their usernames.
      */
@@ -72,6 +79,9 @@ public class GameHub {
         players.put(p.getUsername(), p);
     }
 
+    public static RegisteredPlayer getLoggedInUser() {
+        return loggedInUser;
+    }
 
 
 
@@ -144,6 +154,7 @@ public class GameHub {
 
         // shared options
         menuOptions.add(new MenuOption("show game information", GameHub::showGameInfoMenu));
+        menuOptions.add(new MenuOption("show player information", GameHub::showPlayerInfoMenu));
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
@@ -164,7 +175,13 @@ public class GameHub {
             }));
         }
 
-        Menu.showMenu("Please choose a game", menuOptions);
+        if (menuOptions.size() > 0) {
+            Menu.showMenu("Please choose a game", menuOptions);
+        } else {
+            Menu.showMenu("Please choose a game", new ArrayList<>(Arrays.asList(
+                new MenuOption("none, go back", GameHub::showLoggedInMenu)
+            )));
+        }
     }
 
     /**
@@ -176,6 +193,41 @@ public class GameHub {
         Menu.pressEnterToConfirm("back");
         showLoggedInMenu();
     }
+
+    /**
+     * Show the menu to choose a player
+     */
+    private static void showPlayerInfoMenu() { //TODO make generic
+        ArrayList<MenuOption> menuOptions = new ArrayList<>();
+
+        for (Player p : players.values()) {
+            if (p instanceof RegisteredPlayer) {
+                final RegisteredPlayer player = (RegisteredPlayer) p;
+                menuOptions.add(new MenuOption(p.getUsername(), () -> {
+                    printPlayerInfo(player);
+                }));
+            }
+        }
+
+        if (menuOptions.size() > 0) {
+            Menu.showMenu("Please choose a player", menuOptions);
+        } else {
+            Menu.showMenu("Please choose a player", new ArrayList<>(Arrays.asList(
+                new MenuOption("none, go back", GameHub::showLoggedInMenu)
+            )));
+        }
+    }
+
+    /**
+     * Display information for the given player.
+     * @param player the name of the player
+     */
+    private static void printPlayerInfo(Player player) {
+        System.out.println(player);
+        Menu.pressEnterToConfirm("back");
+        showLoggedInMenu();
+    }
+
 
     /**
      * Terminate the application
@@ -217,9 +269,27 @@ public class GameHub {
         // ===================== default state =====================
         // ===================== default state =====================
         try {
-            new RegisteredPlayer("john", "john@example.com", Menu.parseDate("01/02/1993"), collection.gePlatform("PC"));
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
+            Game minecraft = collection.getGame("Minecraft");
+            
+            RegisteredPlayer p1 = new RegisteredPlayer("john", "john@example.com", Menu.parseDate("01/02/1993"), collection.gePlatform("X360"));
+            p1.obtainGame(minecraft); // 240
+            
+            RegisteredPlayer p2 = new RegisteredPlayer("dan", "dan@example.com", Menu.parseDate("08/04/1997"), collection.gePlatform("PS3"));
+            p2.obtainGame(minecraft); // 240
+            
+            RegisteredPlayer p3 = new RegisteredPlayer("jeff", "jeff@example.com", Menu.parseDate("08/11/1994"), collection.gePlatform("PS4"));
+            p3.obtainGame(minecraft); // 240
+
+            RegisteredPlayer p4 = new Child("jessica", "jessica@example.com", Menu.parseDate("08/11/2007"), collection.gePlatform("PS4"), p1);
+            p3.obtainGame(minecraft); // 240
+
+            new GameResult(minecraft, p1, p3);
+            new GameResult(minecraft, p2, p1);
+            new GameResult(minecraft, p2, p3);
+            new GameResult(minecraft, p4, p1);
+
+        } catch (ParseException | GameAcquiringException | GameResultException | TutoringException e) {
+            System.out.println("incoherent test data.");
             e.printStackTrace();
         }
         // =========================================================

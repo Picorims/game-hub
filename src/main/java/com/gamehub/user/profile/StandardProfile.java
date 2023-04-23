@@ -30,7 +30,11 @@ import com.gamehub.user.RegisteredPlayer;
 import com.gamehub.user.bot.Bot;
 
 public class StandardProfile implements MemberProfile {
-
+    @Override
+    public String getName() {
+        return "Standard profile";
+    }
+    
     @Override
     public int maxGames() {
         return 50;

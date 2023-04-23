@@ -27,6 +27,7 @@ package com.gamehub.user;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.gamehub.GameHub;
 import com.gamehub.library.Platform;
 
 /**
@@ -71,5 +72,22 @@ public class Child extends RegisteredPlayer {
 
         tutors.remove(tutor);
         tutor.removeChild(this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (tutors.contains(GameHub.getLoggedInUser())) {
+            // not restricted for tutors
+            sb.append(super.toString());
+        } else {
+            // restritcted
+            sb.append("username: " + username + "\n");
+            sb.append("games count: " + games.size() + "\n");
+            sb.append("friends count: " + friends.size() + "\n");
+        }
+
+        return sb.toString();
     }
 }
