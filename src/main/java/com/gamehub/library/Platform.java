@@ -35,11 +35,15 @@ public class Platform {
     private final String name;
     private ArrayList<GameVersion> gameVersions;
     private ArrayList<RegisteredPlayer> players;
-
+    
     public Platform(String name) {
         this.name = name;
         gameVersions = new ArrayList<>();
         players = new ArrayList<>();
+    }
+    
+    public String getName() {
+        return name;
     }
 
     public void addGameVersion(GameVersion gameVersion) {

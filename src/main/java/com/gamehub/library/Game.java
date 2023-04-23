@@ -85,4 +85,23 @@ public class Game {
     public void addGameResult(GameResult g) {
         results.add(g);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("name: " + this.name + "\n");
+        sb.append("genre: " + this.genre + "\n");
+        sb.append("versions: ");
+        for (GameVersion gv : versions) {
+            sb.append("---\n");
+            sb.append(gv);
+        }
+        sb.append("---\n");
+        String botName = (bot == null)? "N/A" : bot.getUsername();
+        sb.append("bot: " + botName + "\n");
+        sb.append("players count: " + players.size() + "\n");
+
+        return sb.toString();
+    }
 }

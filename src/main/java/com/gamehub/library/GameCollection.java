@@ -139,6 +139,10 @@ public class GameCollection {
         return gameNames;
     }
 
+    public Game getGame(String name) {
+        return games.get(name);
+    }
+
     public Platform gePlatform(String name) {
         return platforms.get(name);
     }

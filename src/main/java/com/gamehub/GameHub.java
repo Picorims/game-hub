@@ -143,22 +143,38 @@ public class GameHub {
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 
         // shared options
+        menuOptions.add(new MenuOption("show game information", GameHub::showGameInfoMenu));
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
     }
 
-    private static void showGameInfo() {
-        // TODO wip
+    /**
+     * Show the menu to choose a game
+     */
+    private static void showGameInfoMenu() { //TODO make generic
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 
-        List<String> games = collection.getGameNames();
+        List<String> gameNames = collection.getGameNames();
 
-        for (int i = 0; i < games.size(); i++) {
-            menuOptions.add(new MenuOption(games.get(i), () -> {}));
+        for (int i = 0; i < gameNames.size(); i++) {
+            final int gameIndex = i;
+            menuOptions.add(new MenuOption(gameNames.get(i), () -> {
+                printGameInfo(gameNames.get(gameIndex));
+            }));
         }
 
         Menu.showMenu("Please choose a game", menuOptions);
+    }
+
+    /**
+     * Display information for the given game.
+     * @param name the name of the game
+     */
+    private static void printGameInfo(String name) {
+        System.out.println(collection.getGame(name));
+        Menu.pressEnterToConfirm("back");
+        showLoggedInMenu();
     }
 
     /**

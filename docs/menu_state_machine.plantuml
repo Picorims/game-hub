@@ -25,7 +25,7 @@
 skinparam BackgroundColor #222222
 
 state ShowUserInfo
-state ShowGameInfo
+state ShowGameInfoMenu
 state AddPlayer
 
 [*] --> MainMenu: init
@@ -80,7 +80,7 @@ state LoggedInMenu #113355 {
 }
 logout --> MainMenu: logout
 LoggedInMenu --> ShowUserInfo: show user info
-LoggedInMenu --> ShowGameInfo: show game info
+LoggedInMenu --> ShowGameInfoMenu: show game info
 LoggedInMenu --> AddPlayer: add player [not a child]
 LoggedInMenu --> Play: play
 
@@ -92,7 +92,9 @@ ShowUserInfo: <b>Entry</b> [user type = admin or adult] / show all
 ShowUserInfo: <b>Entry</b> [user type = child] / show restricted
 ShowUserInfo --> LoggedInMenu: back
 
-ShowGameInfo --> LoggedInMenu: back
+ShowGameInfoMenu --> PrintGameInfo: choose game
+
+PrintGameInfo --> LoggedInMenu: back
 
 AddPlayer --> LoggedInMenu: back
 

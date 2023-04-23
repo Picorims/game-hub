@@ -41,4 +41,16 @@ public class GameVersion {
         this.publisher = publisher;
         this.globalSales = globalSales;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("platform: " + platform.getName() + "\n");
+        sb.append("year: " + year + "\n");
+        sb.append("publisher: " + publisher + "\n");
+        sb.append("globalSales: " + globalSales + " millions of copies\n");
+
+        return sb.toString();
+    }
 }
