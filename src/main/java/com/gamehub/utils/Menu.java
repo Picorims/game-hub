@@ -144,6 +144,7 @@ public class Menu {
         }
 
         int minInput = 0;
+        int maxInput = options.size() - 1;
         int respPrevious = Integer.MIN_VALUE;
         int respNext = Integer.MIN_VALUE;
         if (min > 0) {
@@ -158,7 +159,7 @@ public class Menu {
         }
 
         // input
-        int response = getInputInt("-> action", minInput, options.size()-1);
+        int response = getInputInt("-> action ("+minInput+" to "+maxInput+")", minInput, options.size()-1);
 
         // action
         if (response == respPrevious) {

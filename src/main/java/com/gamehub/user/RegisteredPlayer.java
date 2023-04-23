@@ -71,6 +71,7 @@ public class RegisteredPlayer extends Player {
      */
     public void obtainGame(Game g) throws GameAcquiringException {
         if (this.games.size() < this.memberProfile.maxGames()) {
+            // TODO test if platform match!
             this.games.add(g);
             g.addPlayer(this);
         } else {
