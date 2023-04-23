@@ -75,6 +75,7 @@ package gamehub {
             + {static} getInputInt(promptMsg: String, min: int = 0, max: int = 1): int
             + {static} getInputString(promptMsg: String): String
             + {static} parseDate(date: String): Date
+            + {static} pressEnterToConfirm(promptMsg: String = ""): void
         }
     }
 

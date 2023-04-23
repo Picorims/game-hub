@@ -156,6 +156,19 @@ public class Menu {
         return dateObj;
     }
 
+    /**
+     * Put the program on hold until the user presses Enter.
+     * @param promptMsg message to display
+     */
+    public static void pressEnterToConfirm(String promptMsg) {
+        System.out.print(promptMsg + " [press Enter]");
+        scanner.nextLine();
+    }
+
+    public static void pressEnterToConfirm() {
+        pressEnterToConfirm("");
+    }
+
 
 
     /**
@@ -171,6 +184,8 @@ public class Menu {
 
         String s = getInputString("test str");
         System.out.println("=> " + s);
+
+        pressEnterToConfirm("back");
 
         try {
             showMenu(null, null);

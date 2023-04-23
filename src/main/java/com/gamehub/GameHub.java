@@ -73,6 +73,19 @@ public class GameHub {
         players.put(p.getUsername(), p);
     }
 
+
+
+
+
+
+
+
+
+
+    // ================================= UI LOGIC ==================================
+    // ================================= UI LOGIC ==================================
+    // ================================= UI LOGIC ==================================
+
     /**
      * Menu displayed at start up
      */
@@ -130,6 +143,7 @@ public class GameHub {
     private static void showLoggedInMenu() {
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 
+        // shared options
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);

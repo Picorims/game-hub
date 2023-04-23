@@ -85,7 +85,7 @@ LoggedInMenu --> AddPlayer: add player [not a child]
 LoggedInMenu --> Play: play
 
 note right of LoggedInMenu
-    An exit point must be taken to leave this state.
+    An exit point <b>MUST</b> be taken to leave this state.
 end note
 
 ShowUserInfo: <b>Entry</b> [user type = admin or adult] / show all
