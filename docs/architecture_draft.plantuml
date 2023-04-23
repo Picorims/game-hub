@@ -51,10 +51,11 @@ package gamehub {
         
         - {static} showPlayerInfoMenu()
         - {static} showPlayerInfo(p: Player)
-        
-        - {static} createBot() TODO
 
-        - {static} selectPlatform(): String
+        - {static} getGame()
+
+        - {static} selectGame(): Game
+        - {static} selectPlatform(): Platform
         
         - {static} quit()
     }

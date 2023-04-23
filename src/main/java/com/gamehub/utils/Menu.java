@@ -172,17 +172,16 @@ public class Menu {
 
         // action
         if (response == respPrevious) {
-            showMenu(title, options, page - 1);
+            return showMenu(title, options, page - 1);
 
         } else if (response == respNext) {
-            showMenu(title, options, page + 1);
+            return showMenu(title, options, page + 1);
         
         } else {
             System.out.println("================ [ => " + options.get(response).getTitle() + "] ================");
             options.get(response).call();
+            return response;
         }
-
-        return response;
     }
 
     public static int showMenu(String title, ArrayList<MenuOption> options) {
@@ -257,7 +256,8 @@ public class Menu {
                     System.out.println("it is " + index);
                 }));
             }
-            showMenu("a lot of stuff", options);
+            int result2 = showMenu("a lot of stuff", options);
+            System.out.println(result2 + ", it was.");
         }
     }
 }

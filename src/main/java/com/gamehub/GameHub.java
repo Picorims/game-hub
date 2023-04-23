@@ -36,6 +36,8 @@ import com.gamehub.library.Game;
 import com.gamehub.library.GameCollection;
 import com.gamehub.library.GameResult;
 import com.gamehub.library.GameResultException;
+import com.gamehub.library.NullPlatform;
+import com.gamehub.library.Platform;
 import com.gamehub.user.Admin;
 import com.gamehub.user.Child;
 import com.gamehub.user.GameAcquiringException;
@@ -165,6 +167,9 @@ public class GameHub {
         if (!(loggedInUser instanceof Child)) {
             menuOptions.add(new MenuOption("create a player", GameHub::createPlayer));
         }
+        if (loggedInUser instanceof RegisteredPlayer && !(loggedInUser instanceof Child)) {
+            menuOptions.add(new MenuOption("obtain a game", GameHub::getGame));
+        }
         menuOptions.add(new MenuOption("logout", GameHub::logout));
 
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
@@ -173,24 +178,13 @@ public class GameHub {
     /**
      * Show the menu to choose a game
      */
-    private static void showGameInfoMenu() { //TODO make generic
-        ArrayList<MenuOption> menuOptions = new ArrayList<>();
-
-        List<String> gameNames = collection.getGameNames();
-
-        for (int i = 0; i < gameNames.size(); i++) {
-            final int gameIndex = i;
-            menuOptions.add(new MenuOption(gameNames.get(i), () -> {
-                printGameInfo(gameNames.get(gameIndex));
-            }));
-        }
-
-        if (menuOptions.size() > 0) {
-            Menu.showMenu("Please choose a game", menuOptions);
+    private static void showGameInfoMenu() {
+        Game game = selectGame();
+        if (game == null) {
+            System.out.println("no game available.");
+            showLoggedInMenu();
         } else {
-            Menu.showMenu("Please choose a game", new ArrayList<>(Arrays.asList(
-                new MenuOption("none, go back", GameHub::showLoggedInMenu)
-            )));
+            printGameInfo(game);
         }
     }
 
@@ -198,8 +192,8 @@ public class GameHub {
      * Display information for the given game.
      * @param name the name of the game
      */
-    private static void printGameInfo(String name) {
-        System.out.println(collection.getGame(name));
+    private static void printGameInfo(Game game) {
+        System.out.println(game);
         Menu.pressEnterToConfirm("back");
         showLoggedInMenu();
     }
@@ -283,17 +277,17 @@ public class GameHub {
             }
             // do not test if it is greater than today, nor if it is valid for a child (< 18 years old)
         });
-        String platform = selectPlatform();
+        Platform platform = selectPlatform();
 
         Date date;
         try {
             date = Menu.parseDate(birthDate);
 
             if (creatingChild) {
-                new Child(username, email, date, collection.getPlatform(platform), loggedInUser);
+                new Child(username, email, date, platform, loggedInUser);
                 
             } else {
-                RegisteredPlayer p = new RegisteredPlayer(username, email, date, collection.getPlatform(platform));
+                RegisteredPlayer p = new RegisteredPlayer(username, email, date, platform);
                 p.setMemberProfile(profile);
             }
     
@@ -318,10 +312,21 @@ public class GameHub {
     }
 
     /**
+     * Let a player give itself a new game
+     */
+    private static void getGame() {
+        if (loggedInUser instanceof Admin || loggedInUser instanceof Child) {
+            throw new IllegalStateException("only adult players can obtain games.");
+        }
+
+
+    }
+
+    /**
      * Select a platform from the list of available platforms through a menu.
      * @return
      */
-    private static String selectPlatform() {
+    private static Platform selectPlatform() {
         ArrayList<MenuOption> options = new ArrayList<>();
         Set<String> platforms = collection.getPlatforms();
 
@@ -329,8 +334,34 @@ public class GameHub {
             options.add(new MenuOption(platform));
         }
 
-        int result = Menu.showMenu("Select a platform", options);
-        return options.get(result).getTitle();
+        if (options.size() == 0) {
+            return new NullPlatform();
+        } else {
+            int result = Menu.showMenu("Select a platform", options);
+            String name = options.get(result).getTitle();
+            return collection.getPlatform(name);
+        }
+    }
+
+    /**
+     * Show a menu to select a game, and return the name of the game selected.
+     * @return
+     */
+    private static Game selectGame() {
+        ArrayList<MenuOption> menuOptions = new ArrayList<>();
+
+        List<String> gameNames = collection.getGameNames();
+
+        for (int i = 0; i < gameNames.size(); i++) {
+            menuOptions.add(new MenuOption(gameNames.get(i)));
+        }
+
+        if (menuOptions.size() == 0) {
+            return null;
+        } else {
+            int result = Menu.showMenu("Please choose a game", menuOptions);
+            return collection.getGame(gameNames.get(result));
+        }
     }
 
     /**
