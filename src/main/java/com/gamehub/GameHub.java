@@ -148,7 +148,7 @@ public class GameHub {
         Menu.showMenu("Welcome " + loggedInUser.getUsername() + ", please choose an action", menuOptions);
     }
 
-    private static void showGameInfo(int page) {
+    private static void showGameInfo() {
         // TODO wip
         ArrayList<MenuOption> menuOptions = new ArrayList<>();
 

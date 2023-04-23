@@ -136,7 +136,8 @@ public class Menu {
         int max = Math.min(min + PAGE_LENGTH, options.size());
 
         // display
-        System.out.println("================ ["+title+" | page "+page+"] ================");
+        long pageMax = (long) Math.floor(options.size() / PAGE_LENGTH);
+        System.out.println("================ ["+title+" | page "+(page+1)+"/"+(pageMax+1)+"] ================");
 
         for (int i = min; i < max; i++) {
             System.out.println(i + " - " + options.get(i).getTitle());

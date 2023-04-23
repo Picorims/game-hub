@@ -45,7 +45,8 @@ package gamehub {
         - {static} showLoggedInMenu()
         - {static} createPlayer() TODO
         - {static} showPlayerInfo(p: Player) TODO
-        - {static} showGameInfo(g: Game) TODO
+        - {static} showGameInfo()
+        - {static} printGameInfo(g: Game) TODO
         - {static} createBot() TODO
         - {static} quit()
     }
@@ -72,7 +73,7 @@ package gamehub {
             - {static} PAGE_LENGTH = 25
             - scanner: Scanner
             --
-            + {static} showMenu(title: String, options: ArrayList<MenuOption>)
+            + {static} showMenu(title: String, options: ArrayList<MenuOption>, page: int = 0)
             + {static} getInputInt(promptMsg: String, min: int = 0, max: int = 1): int
             + {static} getInputString(promptMsg: String): String
             + {static} parseDate(date: String): Date
